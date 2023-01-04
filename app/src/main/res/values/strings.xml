@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Test Application</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sodales senectus dictum arcu sit tristique donec eget.</string>
+    <string name="title_activity_cart">CartActivity</string>
+    <string name="title_activity_reservation">ReservationActivity</string>
+    <string name="title_activity_order">OrderActivity</string>
+</resources>
