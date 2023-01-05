@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,16 +15,19 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testapplication.OrderActivity
 import com.example.testapplication.R
 import com.example.testapplication.ReservationActivity
+import com.example.testapplication.footer.Footer
 import com.example.testapplication.ui.theme.*
 
 @Composable
@@ -137,24 +141,135 @@ fun HeadBody(context: Context) {
 }
 
 @Composable
+fun WelcomeBody(context: Context) {
+    Column(
+        modifier = Modifier
+            .background(welcomeBackground)
+            .graphicsLayer(alpha = 10f)
+            .fillMaxSize(1f)
+            .fillMaxHeight(1f)
+            .padding(
+                top = 75.dp,
+                start = 25.dp
+            )
+    ) {
+        Row(horizontalArrangement = Arrangement.Start) {
+            Text(
+                text = "Welcome to",
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp,
+                color = cuisineColor,
+                textAlign = TextAlign.Start
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = "delizioso",
+                fontWeight = FontWeight.Bold,
+                fontSize = 35.sp,
+                color = fontSecondary,
+                textAlign = TextAlign.Start
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .padding(top = 25.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.lorem_ipsum),
+                fontSize = 12.sp,
+                color = lorColor,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .size(
+                        width = 291.dp,
+                        height = 96.dp
+                    )
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .padding(top = 25.dp)
+        ) {
+            TextButton(
+                onClick = {
+                    Toast
+                        .makeText(context, "See our menu", Toast.LENGTH_SHORT)
+                        .show()
+                },
+                colors = ButtonDefaults.buttonColors(fontSecondary),
+                shape = RoundedCornerShape(60),
+                modifier = Modifier
+                    .size(
+                        width = 168.dp,
+                        height = 55.dp
+                    )
+            ) {
+                Text(
+                    "See our menu",
+                    fontSize = 14.sp,
+                    color = white,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+        Row {
+            Image(
+                painter = painterResource(id = R.drawable.picture),
+                contentDescription = "Picture",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .size(
+                        width = 367.12.dp,
+                        height = 357.86.dp
+                    )
+            )
+        }
+    }
+}
+
+@Composable
 fun HomeContent(name: String) {
     val context = LocalContext.current
+
+//    Row {
+//        TopNavBar(name = name)
+//    }
+//    Row(
+//        Modifier
+//            .padding(top = 80.dp)
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .verticalScroll(rememberScrollState()),
+//            verticalArrangement = Arrangement.Center
+//        ) {
+//            HeadBtn(context = context)
+//            HeadBody(context = context)
+//            HeadBody(context = context)
+//        }
+//    }
 
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center
     ) {
         TopNavBar(name = name)
         HeadBtn(context = context)
         HeadBody(context = context)
-        HeadBody(context = context)
-    }
+        WelcomeBody(context = context)
 
+        Footer(name = name)
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun test() {
+fun Test() {
     HomeContent("MainActivity")
 }

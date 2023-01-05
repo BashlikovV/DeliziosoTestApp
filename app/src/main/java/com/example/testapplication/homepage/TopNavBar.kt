@@ -10,6 +10,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import com.example.testapplication.CartActivity
 import com.example.testapplication.MainActivity
 import com.example.testapplication.R
-import com.example.testapplication.ReservationActivity
 import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.fontPrimary
 import com.example.testapplication.ui.theme.fontSecondary
@@ -65,6 +65,11 @@ fun TopNavBar(name: String) {
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = "BtnImage",
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 10.dp,
+                            shape = CircleShape
+                        )
                 )
             }
             Text(
