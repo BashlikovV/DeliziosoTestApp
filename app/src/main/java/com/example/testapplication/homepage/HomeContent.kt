@@ -250,7 +250,9 @@ fun HomeContent(name: String) {
 //        ) {
 //            HeadBtn(context = context)
 //            HeadBody(context = context)
-//            HeadBody(context = context)
+//            WelcomeBody(context = context)
+//
+//            Footer(name = name)
 //        }
 //    }
 

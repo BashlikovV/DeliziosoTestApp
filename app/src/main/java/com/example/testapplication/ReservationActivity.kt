@@ -3,6 +3,7 @@ package com.example.testapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -24,8 +25,7 @@ class ReservationActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = background,
                 ) {
-                    TopNavBar(this.localClassName)
-                    ReservationCard(data = "str")
+                    ReservationCard(data = this.localClassName)
                 }
             }
         }
@@ -39,10 +39,9 @@ fun Test() {
         Surface(
             modifier = Modifier
                 .fillMaxSize(),
-            color = background
+            color = background,
         ) {
-            TopNavBar("ReservationActivity")
-            ReservationCard(data = "str")
+            ReservationCard(data = "ReservationActivity")
         }
 
     }

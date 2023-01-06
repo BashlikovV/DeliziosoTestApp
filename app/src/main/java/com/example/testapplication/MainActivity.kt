@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = background,
                 ) {
-                    HomeContent(this.localClassName)
+                    HomeContent(name = this.localClassName)
                 }
             }
         }

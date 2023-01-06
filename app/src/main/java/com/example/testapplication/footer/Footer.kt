@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,17 +24,24 @@ import com.example.testapplication.MainActivity
 import com.example.testapplication.R
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
+import com.example.testapplication.ui.theme.white
 
 @Composable
 fun Footer(name: String) {
     val context = LocalContext.current
     val homeIntent = Intent(context, MainActivity::class.java)
+
+    val toast: (String) -> Unit = {
+        Toast
+            .makeText(context, it, Toast.LENGTH_SHORT)
+            .show()
+    }
     
     Column(
         modifier = Modifier
             .background(cuisineColor)
             .fillMaxSize(1f)
-            .padding(start = 25.dp),
+            .padding(start = 25.dp, bottom = 25.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Row {
@@ -141,6 +149,67 @@ fun Footer(name: String) {
                         )
                 )
             }
+        }
+        Column(
+            modifier = Modifier
+                .padding(top = 69.dp)
+        ) {
+            PrimaryFooterText(str = "Page") {toast(it)}
+            FooterText(str = "Home") {toast(it)}
+            FooterText(str = "Menu") {toast(it)}
+            FooterText(str = "Order online") {toast(it)}
+            FooterText(str = "Catering") {toast(it)}
+            FooterText(str = "Reservation") {toast(it)}
+
+            PrimaryFooterText(str = "Reservation") {toast(it)}
+            FooterText(str = "About us") {toast(it)}
+            FooterText(str = "Testimonial") {toast(it)}
+            FooterText(str = "Event") {toast(it)}
+
+            PrimaryFooterText(str = "Get in touch") {toast(it)}
+            FooterText(str = "3247 Johnson Ave, Bronx, NY 10463, Amerika Serikat") {toast(it)}
+            FooterText(str = "delizioso@gmail.com") {toast(it)}
+            FooterText(str = "+123 4567 8901") {toast(it)}
+            Spacer(modifier = Modifier.padding(bottom = 35.dp))
+
+            FooterText(str = "Copyright c 2022 Delizioso") {toast(it)}
+        }
+    }
+}
+
+@Composable
+fun PrimaryFooterText(str: String, onClick: (String) -> Unit) {
+    Row {
+        TextButton (
+            onClick = {
+                onClick(str)
+            },
+            modifier = Modifier
+                .padding(bottom = 25.dp)
+        ) {
+            Text(
+                text = str,
+                color = fontSecondary,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+@Composable
+fun FooterText(str: String, onClick: (String) -> Unit) {
+    Row {
+        TextButton (
+            onClick = {
+                onClick(str)
+            }
+        ) {
+            Text(
+                text = str,
+                color = white,
+                fontSize = 14.sp,
+            )
         }
     }
 }
