@@ -1,6 +1,5 @@
 package com.example.testapplication.reservation
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -37,15 +36,12 @@ fun ReservationCard(data: String) {
         when(index) {
             0 -> {
                 ReservationActivity.Data.date = str
-                Log.i("MYTAG", "data: ${ReservationActivity.Data.date}")
             }
             1 -> {
                 ReservationActivity.Data.time = str
-                Log.i("MYTAG", "time: ${ReservationActivity.Data.time}")
             }
             2 -> {
                 ReservationActivity.Data.partySize = str
-                Log.i("MYTAG", "party size: ${ReservationActivity.Data.partySize}")
             }
         }
     }

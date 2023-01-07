@@ -2,7 +2,6 @@ package com.example.testapplication
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,10 +62,6 @@ class ReservationActivity : ComponentActivity() {
             putString(PARTY_SIZE, Data.partySize)
         }
         editor.apply()
-
-        Log.i("MYTAGS", Data.date)
-        Log.i("MYTAGS", Data.time)
-        Log.i("MYTAGS", Data.partySize)
     }
 
     private fun loadInputData() {
@@ -77,10 +72,6 @@ class ReservationActivity : ComponentActivity() {
             Data.time = getString(TIME, "").toString()
             Data.partySize = getString(PARTY_SIZE, "").toString()
         }
-
-        Log.i("MYTAGL", Data.date)
-        Log.i("MYTAGL", Data.time)
-        Log.i("MYTAGL", Data.partySize)
     }
 }
 
