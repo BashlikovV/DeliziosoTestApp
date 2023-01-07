@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -116,14 +115,7 @@ fun GetText(value: String, listener: (String) -> Unit) {
                 )
             },
             modifier = Modifier
-                .clip(RoundedCornerShape(20))
-                .onSizeChanged {
-                    when(value[0]) {
-                        'D' -> text = TextFieldValue(ReservationActivity.Data.date)
-                        'T' -> text = TextFieldValue(ReservationActivity.Data.time)
-                        'P' -> text = TextFieldValue(ReservationActivity.Data.partySize)
-                    }
-                },
+                .clip(RoundedCornerShape(20)),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             trailingIcon = {
                 Icon(
