@@ -11,10 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.testapplication.ui.theme.TestApplicationTheme
 import com.example.testapplication.reservation.ReservationCard
+import com.example.testapplication.states.ReservationViewState
 import com.example.testapplication.ui.theme.background
 
 class ReservationActivity : ComponentActivity() {
     private lateinit var sPref: SharedPreferences
+    private val data = ReservationViewState()
 
     companion object Keys {
         const val DATE = "data"
@@ -22,15 +24,8 @@ class ReservationActivity : ComponentActivity() {
         const val PARTY_SIZE = "party_size"
     }
 
-    object Data {
-        var date = ""
-        var time = ""
-        var partySize = ""
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             TestApplicationTheme {
                 // A surface container using the 'background' color from the theme
@@ -39,7 +34,10 @@ class ReservationActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = background,
                 ) {
-                    ReservationCard(data = this.localClassName)
+                    ReservationCard(
+                        name = this.localClassName,
+                        reservationViewState = data
+                    )
                 }
             }
         }
@@ -57,9 +55,9 @@ class ReservationActivity : ComponentActivity() {
         val editor = sPref.edit()
 
         with(editor) {
-            putString(DATE, Data.date)
-            putString(TIME, Data.time)
-            putString(PARTY_SIZE, Data.partySize)
+            putString(DATE, data.date)
+            putString(TIME, data.time)
+            putString(PARTY_SIZE, data.partySize)
         }
         editor.apply()
     }
@@ -68,9 +66,9 @@ class ReservationActivity : ComponentActivity() {
         sPref = getPreferences(MODE_PRIVATE)
 
         with(sPref) {
-            Data.date = getString(DATE, "").toString()
-            Data.time = getString(TIME, "").toString()
-            Data.partySize = getString(PARTY_SIZE, "").toString()
+            data.date = getString(DATE, "").toString()
+            data.time = getString(TIME, "").toString()
+            data.partySize = getString(PARTY_SIZE, "").toString()
         }
     }
 }
@@ -84,7 +82,7 @@ fun Test() {
                 .fillMaxSize(),
             color = background,
         ) {
-            ReservationCard(data = "ReservationActivity")
+            ReservationCard(name = "ReservationActivity", ReservationViewState())
         }
     }
 }
