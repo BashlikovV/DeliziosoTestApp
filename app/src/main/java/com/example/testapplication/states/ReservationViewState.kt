@@ -1,12 +1,12 @@
 package com.example.testapplication.states
 
 class ReservationViewState(
-    var date: String = "Data",
-    var time: String = "Time",
-    var partySize: String = "Party Size"
+    var date: String = "",
+    var time: String = "",
+    var partySize: String = ""
 ) {
     companion object Constants {
-        const val DATA = "Date"
+        const val DATA = "Data"
         const val TIME = "Time"
         const val PARTY_SIZE = "Party size"
     }
@@ -21,9 +21,9 @@ class ReservationViewState(
 
     fun loadReservationViewState(value: String): String {
         return when(value) {
-            "Date" -> this.date
-            "Time" -> this.time
-            "Party size" -> this.partySize
+            DATA -> this.date
+            TIME -> this.time
+            PARTY_SIZE -> this.partySize
             else -> ""
         }
     }
