@@ -13,15 +13,9 @@ class ReservationViewState(
 
     fun saveInputData(index: Int, str: String) {
         when(index) {
-            0 -> {
-                this.date = str
-            }
-            1 -> {
-                this.time = str
-            }
-            2 -> {
-                this.partySize = str
-            }
+            0 -> this.date = str
+            1 -> this.time = str
+            2 -> this.partySize = str
         }
     }
 
