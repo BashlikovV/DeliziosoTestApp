@@ -9,9 +9,9 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.testapplication.ui.theme.TestApplicationTheme
 import com.example.testapplication.reservation.ReservationCard
 import com.example.testapplication.states.ReservationViewState
+import com.example.testapplication.ui.theme.TestApplicationTheme
 import com.example.testapplication.ui.theme.background
 
 class ReservationActivity : ComponentActivity() {

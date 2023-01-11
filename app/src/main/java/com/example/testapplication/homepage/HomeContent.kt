@@ -236,26 +236,6 @@ fun WelcomeBody(context: Context) {
 fun HomeContent(name: String) {
     val context = LocalContext.current
 
-//    Row {
-//        TopNavBar(name = name)
-//    }
-//    Row(
-//        Modifier
-//            .padding(top = 80.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .verticalScroll(rememberScrollState()),
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            HeadBtn(context = context)
-//            HeadBody(context = context)
-//            WelcomeBody(context = context)
-//
-//            Footer(name = name)
-//        }
-//    }
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
