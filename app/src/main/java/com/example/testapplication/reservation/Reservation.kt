@@ -23,28 +23,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testapplication.R
-import com.example.testapplication.ReservationActivity
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
+import com.example.testapplication.states.ReservationViewState
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.inputColor
 
 @Composable
-fun ReservationCard(data: String) {
-    fun saveInputData(index: Int, str: String) {
-        when(index) {
-            0 -> {
-                ReservationActivity.Data.date = str
-            }
-            1 -> {
-                ReservationActivity.Data.time = str
-            }
-            2 -> {
-                ReservationActivity.Data.partySize = str
-            }
-        }
-    }
-
+fun ReservationCard(
+    name: String,
+    reservationViewState: ReservationViewState
+) {
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -54,7 +43,7 @@ fun ReservationCard(data: String) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopNavBar(name = data)
+        TopNavBar(name = name)
         Row {
             Text(
                 text = "Book a table",
@@ -80,22 +69,28 @@ fun ReservationCard(data: String) {
                 contentScale = ContentScale.FillHeight,
             )
         }
-        GetText(value = "Date") {
-            saveInputData(0, it)
+        GetText(value = ReservationViewState.DATA, reservationViewState = reservationViewState) {
+            reservationViewState.saveInputData(0, it)
         }
-        GetText(value = "Time") {
-            saveInputData(1, it)
+        GetText(value = ReservationViewState.TIME, reservationViewState = reservationViewState) {
+            reservationViewState.saveInputData(1, it)
         }
-        GetText(value = "Party size") {
-            saveInputData(2, it)
+        GetText(value = ReservationViewState.PARTY_SIZE, reservationViewState = reservationViewState) {
+            reservationViewState.saveInputData(2, it)
         }
-        Footer(name = data)
+        Footer(name = name)
     }
 }
 
 @Composable
-fun GetText(value: String, listener: (String) -> Unit) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun GetText(
+    value: String,
+    reservationViewState: ReservationViewState,
+    listener: (String) -> Unit
+) {
+    var text by remember {
+        mutableStateOf(TextFieldValue(reservationViewState.loadReservationViewState(value)))
+    }
 
     Column(
         modifier = Modifier
@@ -131,5 +126,5 @@ fun GetText(value: String, listener: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun Test() {
-    ReservationCard(data = "text")
+    ReservationCard(name = "text", reservationViewState = ReservationViewState())
 }
