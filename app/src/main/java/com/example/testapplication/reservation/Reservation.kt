@@ -1,6 +1,7 @@
 package com.example.testapplication.reservation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +32,7 @@ import com.example.testapplication.homepage.TopNavBar
 import com.example.testapplication.states.ReservationViewState
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.inputColor
+import com.example.testapplication.ui.theme.lorColor
 
 @Composable
 fun ReservationCard(
@@ -113,7 +115,8 @@ fun GetText(
                 )
             },
             modifier = Modifier
-                .clip(RoundedCornerShape(20)),
+                .clip(RoundedCornerShape(20))
+                .background(inputColor),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             trailingIcon = {
                 Icon(
@@ -121,7 +124,7 @@ fun GetText(
                     contentDescription = null
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(inputColor),
+            colors = TextFieldDefaults.textFieldColors(lorColor)
         )
     }
 }
