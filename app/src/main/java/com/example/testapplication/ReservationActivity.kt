@@ -1,28 +1,21 @@
 package com.example.testapplication
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.testapplication.reservation.ReservationCard
-import com.example.testapplication.states.ReservationViewState
 import com.example.testapplication.ui.theme.TestApplicationTheme
 import com.example.testapplication.ui.theme.background
+import com.example.testapplication.view.model.ReservationActivityViewModel
 
 class ReservationActivity : ComponentActivity() {
-    private lateinit var sPref: SharedPreferences
-    private val data = ReservationViewState()
-
-    companion object Keys {
-        const val DATE = "data"
-        const val TIME = "time"
-        const val PARTY_SIZE = "party_size"
-    }
+    private val viewModel by viewModels<ReservationActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,40 +29,13 @@ class ReservationActivity : ComponentActivity() {
                 ) {
                     ReservationCard(
                         name = this.localClassName,
-                        reservationViewState = data
+                        reservationActivityViewModel = viewModel
                     )
                 }
             }
         }
 
-        loadInputData()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        saveInputData()
-    }
-
-    private fun saveInputData() {
-        sPref = getPreferences(MODE_PRIVATE)
-        val editor = sPref.edit()
-
-        with(editor) {
-            putString(DATE, data.date)
-            putString(TIME, data.time)
-            putString(PARTY_SIZE, data.partySize)
-        }
-        editor.apply()
-    }
-
-    private fun loadInputData() {
-        sPref = getPreferences(MODE_PRIVATE)
-
-        with(sPref) {
-            data.date = getString(DATE, "").toString()
-            data.time = getString(TIME, "").toString()
-            data.partySize = getString(PARTY_SIZE, "").toString()
-        }
+        viewModel.makeViewModel(viewModel)
     }
 }
 
@@ -82,7 +48,7 @@ fun Test() {
                 .fillMaxSize(),
             color = background,
         ) {
-            ReservationCard(name = "ReservationActivity", ReservationViewState())
+            ReservationCard(name = "ReservationActivity", ReservationActivityViewModel())
         }
     }
 }

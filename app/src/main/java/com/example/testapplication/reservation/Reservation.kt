@@ -29,15 +29,15 @@ import androidx.compose.ui.unit.sp
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
-import com.example.testapplication.states.ReservationViewState
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.inputColor
 import com.example.testapplication.ui.theme.lorColor
+import com.example.testapplication.view.model.ReservationActivityViewModel
 
 @Composable
 fun ReservationCard(
     name: String,
-    reservationViewState: ReservationViewState
+    reservationActivityViewModel: ReservationActivityViewModel
 ) {
     Column(
         modifier = Modifier
@@ -74,14 +74,14 @@ fun ReservationCard(
                 contentScale = ContentScale.FillHeight,
             )
         }
-        GetText(value = ReservationViewState.DATA, reservationViewState = reservationViewState) {
-            reservationViewState.saveInputData(0, it)
+        GetText(value = ReservationActivityViewModel.DATA, reservationActivityViewModel) {
+            reservationActivityViewModel.saveReservationActivityData(0, it)
         }
-        GetText(value = ReservationViewState.TIME, reservationViewState = reservationViewState) {
-            reservationViewState.saveInputData(1, it)
+        GetText(value = ReservationActivityViewModel.TIME, reservationActivityViewModel) {
+            reservationActivityViewModel.saveReservationActivityData(1, it)
         }
-        GetText(value = ReservationViewState.PARTY_SIZE, reservationViewState = reservationViewState) {
-            reservationViewState.saveInputData(2, it)
+        GetText(value = ReservationActivityViewModel.PARTY_SIZE, reservationActivityViewModel) {
+            reservationActivityViewModel.saveReservationActivityData(2, it)
         }
         Footer(name = name)
     }
@@ -90,11 +90,11 @@ fun ReservationCard(
 @Composable
 fun GetText(
     value: String,
-    reservationViewState: ReservationViewState,
+    reservationActivityViewModel: ReservationActivityViewModel,
     listener: (String) -> Unit
 ) {
     var text by remember {
-        mutableStateOf(TextFieldValue(reservationViewState.loadReservationViewState(value)))
+        mutableStateOf(TextFieldValue(reservationActivityViewModel.loadReservationViewModel(value)))
     }
 
     Column(
@@ -131,5 +131,5 @@ fun GetText(
 @Preview(showBackground = true)
 @Composable
 fun Test() {
-    ReservationCard(name = "text", reservationViewState = ReservationViewState())
+    ReservationCard(name = "text", ReservationActivityViewModel())
 }
