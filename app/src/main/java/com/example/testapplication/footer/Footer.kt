@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testapplication.MainActivity
+import com.example.testapplication.MenuActivity
 import com.example.testapplication.R
 import com.example.testapplication.ReservationActivity
 import com.example.testapplication.ui.theme.cuisineColor
@@ -32,6 +33,7 @@ fun Footer(name: String) {
     val context = LocalContext.current
     val homeIntent = Intent(context, MainActivity::class.java)
     val reservationIntent = Intent(context, ReservationActivity::class.java)
+    val menuIntent = Intent(context, MenuActivity::class.java)
 
     val toast: (String) -> Unit = {
         Toast
@@ -164,7 +166,13 @@ fun Footer(name: String) {
                     toast("$it is open")
                 }
             }
-            FooterText(str = "Menu") {toast(it)}
+            FooterText(str = "Menu") {
+                if (name != "MenuActivity") {
+                    context.startActivity(menuIntent)
+                } else {
+                    toast("$it is open")
+                }
+            }
             FooterText(str = "Order online") {toast(it)}
             FooterText(str = "Catering") {toast(it)}
             FooterText(str = "Reservation") {

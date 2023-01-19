@@ -25,8 +25,6 @@ fun CartContent(name: String) {
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun CartPreview() {

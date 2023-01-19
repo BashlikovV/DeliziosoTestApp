@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.testapplication.MenuActivity
 import com.example.testapplication.OrderActivity
 import com.example.testapplication.R
 import com.example.testapplication.ReservationActivity
@@ -144,6 +145,7 @@ fun HeadBody() {
 @Composable
 fun WelcomeBody() {
     val context = LocalContext.current
+    val menuIntent = Intent(context, MenuActivity::class.java)
 
     Column(
         modifier = Modifier
@@ -200,9 +202,7 @@ fun WelcomeBody() {
         ) {
             TextButton(
                 onClick = {
-                    Toast
-                        .makeText(context, "See our menu", Toast.LENGTH_SHORT)
-                        .show()
+                    context.startActivity(menuIntent)
                 },
                 colors = ButtonDefaults.buttonColors(fontSecondary),
                 shape = RoundedCornerShape(60),
