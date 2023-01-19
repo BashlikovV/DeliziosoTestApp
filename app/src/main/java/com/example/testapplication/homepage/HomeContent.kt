@@ -1,6 +1,5 @@
 package com.example.testapplication.homepage
 
-import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.testapplication.MenuActivity
 import com.example.testapplication.OrderActivity
 import com.example.testapplication.R
 import com.example.testapplication.ReservationActivity
@@ -31,7 +31,8 @@ import com.example.testapplication.footer.Footer
 import com.example.testapplication.ui.theme.*
 
 @Composable
-fun HeadBtn(context: Context) {
+fun HeadBtn() {
+    val context = LocalContext.current
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
@@ -58,7 +59,8 @@ fun HeadBtn(context: Context) {
 }
 
 @Composable
-fun ReservationButton(context: Context, content: String) {
+fun ReservationButton(content: String) {
+    val context = LocalContext.current
     var color = fontSecondary
     if (content[0] == 'R') {
         color = reservationColor
@@ -93,7 +95,7 @@ fun ReservationButton(context: Context, content: String) {
 }
 
 @Composable
-fun HeadBody(context: Context) {
+fun HeadBody() {
     Column (
         modifier = Modifier
             .padding(
@@ -120,8 +122,8 @@ fun HeadBody(context: Context) {
                 .fillMaxWidth(1f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ReservationButton(context = context, content = "Order now")
-            ReservationButton(context = context, content = "Reservation")
+            ReservationButton(content = "Order now")
+            ReservationButton(content = "Reservation")
         }
         Row {
             Image(
@@ -141,7 +143,10 @@ fun HeadBody(context: Context) {
 }
 
 @Composable
-fun WelcomeBody(context: Context) {
+fun WelcomeBody() {
+    val context = LocalContext.current
+    val menuIntent = Intent(context, MenuActivity::class.java)
+
     Column(
         modifier = Modifier
             .background(welcomeBackground)
@@ -197,9 +202,7 @@ fun WelcomeBody(context: Context) {
         ) {
             TextButton(
                 onClick = {
-                    Toast
-                        .makeText(context, "See our menu", Toast.LENGTH_SHORT)
-                        .show()
+                    context.startActivity(menuIntent)
                 },
                 colors = ButtonDefaults.buttonColors(fontSecondary),
                 shape = RoundedCornerShape(60),
@@ -234,17 +237,15 @@ fun WelcomeBody(context: Context) {
 
 @Composable
 fun HomeContent(name: String) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center
     ) {
         TopNavBar(name = name)
-        HeadBtn(context = context)
-        HeadBody(context = context)
-        WelcomeBody(context = context)
+        HeadBtn()
+        HeadBody()
+        WelcomeBody()
 
         Footer(name = name)
     }

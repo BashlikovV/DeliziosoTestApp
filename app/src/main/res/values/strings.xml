@@ -4,4 +4,5 @@
     <string name="title_activity_cart">CartActivity</string>
     <string name="title_activity_reservation">ReservationActivity</string>
     <string name="title_activity_order">OrderActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
 </resources>

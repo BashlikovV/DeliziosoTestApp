@@ -21,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.testapplication.MainActivity
+import com.example.testapplication.MenuActivity
 import com.example.testapplication.R
+import com.example.testapplication.ReservationActivity
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
 import com.example.testapplication.ui.theme.white
@@ -30,6 +32,8 @@ import com.example.testapplication.ui.theme.white
 fun Footer(name: String) {
     val context = LocalContext.current
     val homeIntent = Intent(context, MainActivity::class.java)
+    val reservationIntent = Intent(context, ReservationActivity::class.java)
+    val menuIntent = Intent(context, MenuActivity::class.java)
 
     val toast: (String) -> Unit = {
         Toast
@@ -155,11 +159,29 @@ fun Footer(name: String) {
                 .padding(top = 69.dp)
         ) {
             PrimaryFooterText(str = "Page") {toast(it)}
-            FooterText(str = "Home") {toast(it)}
-            FooterText(str = "Menu") {toast(it)}
+            FooterText(str = "Home") {
+                if (name != "MainActivity") {
+                    context.startActivity(homeIntent)
+                } else {
+                    toast("$it is open")
+                }
+            }
+            FooterText(str = "Menu") {
+                if (name != "MenuActivity") {
+                    context.startActivity(menuIntent)
+                } else {
+                    toast("$it is open")
+                }
+            }
             FooterText(str = "Order online") {toast(it)}
             FooterText(str = "Catering") {toast(it)}
-            FooterText(str = "Reservation") {toast(it)}
+            FooterText(str = "Reservation") {
+                if (name != "ReservationActivity") {
+                    context.startActivity(reservationIntent)
+                } else {
+                    toast("$it is open")
+                }
+            }
 
             PrimaryFooterText(str = "Reservation") {toast(it)}
             FooterText(str = "About us") {toast(it)}
