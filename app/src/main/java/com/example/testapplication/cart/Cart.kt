@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
 
@@ -22,4 +23,12 @@ fun CartContent(name: String) {
         TopNavBar(name = name)
         Footer(name = name)
     }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun CartPreview() {
+    CartContent(name = "CartActivity")
 }
