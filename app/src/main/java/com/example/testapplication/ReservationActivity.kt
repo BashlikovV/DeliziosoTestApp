@@ -35,7 +35,19 @@ class ReservationActivity : ComponentActivity() {
             }
         }
 
-        viewModel.makeViewModel(viewModel)
+        viewModel.initState(
+            savedInstanceState?.getParcelable(KEY) ?: ReservationActivityViewModel
+                .State("", "", "")
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY, viewModel.state.value)
+    }
+
+    companion object {
+        @JvmStatic val KEY = "KEY"
     }
 }
 

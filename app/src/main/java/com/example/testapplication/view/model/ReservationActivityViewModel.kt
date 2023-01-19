@@ -1,15 +1,17 @@
 package com.example.testapplication.view.model
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.parcelize.Parcelize
 
 class ReservationActivityViewModel: ViewModel() {
 
-    private val state: LiveData<State> get() = stateLiveData
+    val state: LiveData<State> get() = stateLiveData
     private val stateLiveData = MutableLiveData<State>()
 
-    private fun initState(state: State) {
+    fun initState(state: State) {
         stateLiveData.value = state
     }
 
@@ -30,25 +32,16 @@ class ReservationActivityViewModel: ViewModel() {
         }
     }
 
-    fun makeViewModel(viewModel: ReservationActivityViewModel) {
-        if (viewModel.state.value == null) {
-            viewModel.initState(State(
-                dataValue = "",
-                timeValue = "",
-                partySizeValue = ""
-            ))
-        }
-    }
-
+    @Parcelize
     data class State(
         var dataValue: String,
         var timeValue: String,
         var partySizeValue: String
-    )
+    ): Parcelable
 
     companion object Constants {
-        const val DATA = "Data"
-        const val TIME = "Time"
-        const val PARTY_SIZE = "Party size"
+        @JvmStatic val DATA = "Data"
+        @JvmStatic val TIME = "Time"
+        @JvmStatic val PARTY_SIZE = "Party size"
     }
 }
