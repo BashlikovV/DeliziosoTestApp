@@ -1,11 +1,11 @@
 package com.example.testapplication.menu
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.material3.NavigationBar
@@ -36,16 +36,15 @@ import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
 import com.example.testapplication.ui.theme.navItemColor
+import com.example.testapplication.view.model.MenuActivityViewModel
 
 @Composable
 fun MenuContent(name: String) {
     Column(
         modifier = Modifier
             .verticalScroll(
-                state = rememberScrollState(),
-                enabled = true
+                state = rememberScrollState()
             )
-            .fillMaxSize()
     ) {
         TopNavBar(name = name)
         Menu()
@@ -67,7 +66,6 @@ fun Menu() {
             fontWeight = FontWeight.Bold,
             color = cuisineColor
         )
-
         FirstMenu()
     }
 }
@@ -157,22 +155,29 @@ fun NavScreen(items: List<String>, itemName: String) {
 
 @Composable
 fun ProductCardsLayout() {
-    var flag = true
+    val cart = MenuActivityViewModel().testData
+
+    var selectedItem by remember {
+        mutableStateOf(0)
+    }
+
     Column(
         modifier = Modifier
             .background(background)
             .padding(
                 top = 15.dp,
-                start = 25.dp
+                start = 25.dp,
+                end = 25.dp
             )
-            .fillMaxSize(1f)
+            .fillMaxSize(1f),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier
                 .padding(bottom = 25.dp)
         ) {
-            Column{
+            Column {
                 Row {
                     Text(
                         text = "Pasta",
@@ -196,46 +201,32 @@ fun ProductCardsLayout() {
                 }
             }
         }
-        for (i in 0..5 step 2) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(bottom = 15.dp)
-            ) {
-                Spacer(modifier = Modifier.height(15.dp))
-                ProductCard(
-                    image = {
-                        Image(
-                            painter = painterResource(id = R.drawable.illustration),
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop
-                        )
-                    },
-                    productName = "Spaghetti",
-                    productCost = (10..100).random().toFloat(),
-                    starsCount = (1..5).random(),
-                    isSelected = flag,
-                    count = (0..5).random()
-                )
-                flag = false
-                Spacer(modifier = Modifier.width(15.dp))
-                ProductCard(
-                    image = {
-                        Image(
-                            painter = painterResource(id = R.drawable.illustration),
-                            contentDescription = "",
-                            contentScale = ContentScale.Crop
-                        )
-                    },
-                    productName = "Spaghetti",
-                    productCost = (10..100).random().toFloat(),
-                    starsCount = (1..5).random(),
-                    isSelected = false,
-                    count = (0..5).random()
-                )
+        LazyHorizontalGrid(
+            rows = GridCells.Adaptive(minSize = 275.dp),
+            modifier = Modifier
+                .height(860.dp)
+                .width(700.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            userScrollEnabled = false,
+            content = {
+                items(cart) { cartItem -> 
+                    ProductCard(
+                        image = cartItem.imageValue,
+                        productName = cartItem.productNameValue,
+                        productCost = cartItem.productCostValue,
+                        starsCount = cartItem.starsCountValue,
+                        isSelected = cartItem.index == selectedItem,
+                        count = cartItem.countValue,
+                        index = cartItem.index,
+                        onClick = {
+                            selectedItem = it
+                        }
+                    )
+                }
             }
-        }
+        )
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 
@@ -246,7 +237,9 @@ fun ProductCard(
     productCost: Float,
     starsCount: Int,
     isSelected: Boolean,
-    count: Int
+    count: Int,
+    index: Int,
+    onClick: (Int) -> Unit
 ) {
     val backgroundColor = if (isSelected) {
         fontSecondary
@@ -259,16 +252,23 @@ fun ProductCard(
         cuisineColor
     }
     val noColor = if (isSelected) {
-        cuisineColor
-    } else {
         navItemColor
+    } else {
+        fontSecondary
+    }
+
+    var state by remember {
+        mutableStateOf(count)
     }
 
     Column(
         modifier = Modifier
-            .clip(RoundedCornerShape(50.dp))
-            .background(backgroundColor),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .clip(RoundedCornerShape(38.2.dp))
+            .background(backgroundColor)
+            .width(165.dp)
+            .clickable(onClick = {
+                onClick(index)
+            })
     ) {
         Column(
             modifier = Modifier
@@ -276,11 +276,10 @@ fun ProductCard(
                     top = 13.dp,
                     start = 21.dp,
                     end = 21.dp,
-                    bottom = 15.dp
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row{
+            Row {
                 image()
             }
             Row {
@@ -298,7 +297,7 @@ fun ProductCard(
             Row(
                 horizontalArrangement = Arrangement.Center
             ) {
-                for(i in 0 until starsCount) {
+                for (i in 0 until starsCount) {
                     Image(
                         painter = painterResource(id = R.drawable.star_filled),
                         contentDescription = "Star ${i + 1}",
@@ -348,31 +347,44 @@ fun ProductCard(
                             )
                     )
                 }
-                Column (
+                Column(
                     modifier = Modifier
                         .padding(top = 9.5.dp)
-                ){
-                    var state by remember {
-                        mutableStateOf(count)
-                    }
+                ) {
                     FloatingActionButton(
                         onClick = {
                             state++
+                            onClick(index)
                         },
-                        backgroundColor = textColor,
+                        backgroundColor = noColor,
                         modifier = Modifier
                             .size(33.dp),
                     ) {
-                        Text(
-                            text = "${state}x",
-                            color = noColor,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        ViewElem(state = state)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ViewElem(state: Int) {
+    if (state == 0) {
+        Image(
+            painter = painterResource(id = R.drawable.plus),
+            contentDescription = "Add product",
+            contentScale = ContentScale.Inside,
+            modifier = Modifier
+                .size(33.dp)
+        )
+    } else {
+        Text(
+            text = "${state}x",
+            color = cuisineColor,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }
 
@@ -397,6 +409,7 @@ fun CardPreview() {
         productCost = 12.05f,
         starsCount = 4,
         isSelected = true,
-        count = 2
-    )
+        count = 2,
+        index = 0
+    ) {}
 }
