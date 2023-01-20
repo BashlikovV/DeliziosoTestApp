@@ -2,17 +2,19 @@ package com.example.testapplication.view.model
 
 import android.os.Parcelable
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.testapplication.R
 import kotlinx.parcelize.Parcelize
 
 class MenuActivityViewModel: ViewModel() {
     //val state: LiveData<State> get() = stateLiveData
-    private val stateLiveData = MutableLiveData<State>()
+    //private val stateLiveData = MutableLiveData<State>()
 
     val testData = listOf(
         State(
@@ -20,7 +22,8 @@ class MenuActivityViewModel: ViewModel() {
                 Image(
                     painter = painterResource(id = R.drawable.illustration),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Spaghetti",
@@ -33,9 +36,10 @@ class MenuActivityViewModel: ViewModel() {
         State(
             imageValue = {
                 Image(
-                    painter = painterResource(id = R.drawable.illustration),
+                    painter = painterResource(id = R.drawable.fletuccine),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Linguine",
@@ -48,9 +52,10 @@ class MenuActivityViewModel: ViewModel() {
         State(
             imageValue = {
                 Image(
-                    painter = painterResource(id = R.drawable.illustration),
+                    painter = painterResource(id = R.drawable.capellini),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Capellini",
@@ -63,9 +68,10 @@ class MenuActivityViewModel: ViewModel() {
         State(
             imageValue = {
                 Image(
-                    painter = painterResource(id = R.drawable.illustration),
+                    painter = painterResource(id = R.drawable.capellini),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Fetuccine",
@@ -80,7 +86,8 @@ class MenuActivityViewModel: ViewModel() {
                 Image(
                     painter = painterResource(id = R.drawable.illustration),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Bucatini",
@@ -95,7 +102,8 @@ class MenuActivityViewModel: ViewModel() {
                 Image(
                     painter = painterResource(id = R.drawable.illustration),
                     contentDescription = "",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
                 )
             },
             productNameValue = "Fuisilli",
