@@ -16,104 +16,40 @@ class MenuActivityViewModel: ViewModel() {
     //val state: LiveData<State> get() = stateLiveData
     //private val stateLiveData = MutableLiveData<State>()
 
-    val testData = listOf(
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.illustration),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Spaghetti",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 0
-        ),
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.fletuccine),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Linguine",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 1
-        ),
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.capellini),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Capellini",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 2
-        ),
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.capellini),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Fetuccine",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 3
-        ),
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.illustration),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Bucatini",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 4
-        ),
-        State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = R.drawable.illustration),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
-            productNameValue = "Fuisilli",
-            productCostValue = (10..100).random().toFloat(),
-            starsCountValue = (1..5).random(),
-            isSelectedValue = false,
-            countValue = 0,
-            index = 5
-        )
+    private val imagesIds = listOf(
+        R.drawable.illustration,
+        R.drawable.illustration,
+        R.drawable.fletuccine,
+        R.drawable.capellini,
+        R.drawable.capellini,
+        R.drawable.illustration
     )
+    private val namesList = listOf(
+        "Spaghetti",
+        "Linguine",
+        "Capellini",
+        "Fetuccine",
+        "Bucatini",
+        "Fuisilli"
+    )
+    val testData = (0..5).map {
+        State(
+            imageValue = {
+                Image(
+                    painter = painterResource(id = imagesIds[it]),
+                    contentDescription = namesList[it],
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(113.dp)
+                )
+            },
+            productNameValue = namesList[it],
+            productCostValue = (10..100).random().toFloat(),
+            starsCountValue = (1..5).random(),
+            isSelectedValue = false,
+            countValue = 0,
+            index = it
+        )
+    }
 
 //    fun initState(state: State) {
 //        stateLiveData.value = state
