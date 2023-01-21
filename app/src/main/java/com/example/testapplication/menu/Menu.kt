@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -127,6 +128,11 @@ fun FirstMenu() {
         }
     )
 
+    NavHost(navController = navController, items = items)
+}
+
+@Composable
+fun NavHost(navController: NavHostController, items: List<String>) {
     NavHost(navController = navController, startDestination = items[0]) {
         composable(items[0]) {
             NavScreen(items, itemName = items[0])
@@ -210,17 +216,20 @@ fun ProductCardsLayout() {
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = false,
             content = {
-                items(cart) { cartItem -> 
+                items(cart) { cartItem ->
                     ProductCard(
                         image = cartItem.imageValue,
                         productName = cartItem.productNameValue,
                         productCost = cartItem.productCostValue,
                         starsCount = cartItem.starsCountValue,
                         isSelected = cartItem.index == selectedItem,
+                        //When index of selected item == item index, send true
                         count = cartItem.countValue,
                         index = cartItem.index,
+                        //Send item index to change outside selected item index
                         onClick = {
                             selectedItem = it
+                            //Change selected item index
                         }
                     )
                 }
@@ -409,7 +418,7 @@ fun CardPreview() {
         productCost = 12.05f,
         starsCount = 4,
         isSelected = true,
-        count = 2,
+        count = 0,
         index = 0
     ) {}
 }
