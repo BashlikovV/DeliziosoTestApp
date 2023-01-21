@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "679054257986",
+    "project_id": "deliziosotestapp",
+    "storage_bucket": "deliziosotestapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679054257986:android:1b15de3b27587d4a74e2db",
+        "android_client_info": {
+          "package_name": "com.example.testapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679054257986-j38v560oagdvdvtrqmn7hvlud0gvpe4r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI2GvMqPLuRi_Wxls6qU36G4KQ0xaUVhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679054257986-j38v560oagdvdvtrqmn7hvlud0gvpe4r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

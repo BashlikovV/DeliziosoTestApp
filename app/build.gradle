@@ -4,6 +4,9 @@ plugins {
 
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
@@ -21,7 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-
 
         kapt {
             arguments {
@@ -57,6 +59,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-perf:20.3.1'
+    implementation 'com.google.firebase:firebase-perf-ktx:20.3.1'
     def lifecycle_version = "2.4.0"
 
     implementation 'androidx.core:core-ktx:1.9.0'
@@ -90,4 +94,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }
