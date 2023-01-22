@@ -1,10 +1,12 @@
 package com.example.testapplication.menu
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +36,7 @@ import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.HeadBody
 import com.example.testapplication.homepage.TopNavBar
 import com.example.testapplication.homepage.WelcomeBody
+import com.example.testapplication.state.MenuActivityState
 import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
@@ -40,7 +44,10 @@ import com.example.testapplication.ui.theme.navItemColor
 import com.example.testapplication.view.model.MenuActivityViewModel
 
 @Composable
-fun MenuContent(name: String) {
+fun MenuContent(
+    name: String,
+    menuActivityState: MenuActivityState
+) {
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -48,13 +55,13 @@ fun MenuContent(name: String) {
             )
     ) {
         TopNavBar(name = name)
-        Menu()
+        Menu(menuActivityState = menuActivityState)
         Footer(name = name)
     }
 }
 
 @Composable
-fun Menu() {
+fun Menu(menuActivityState: MenuActivityState) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -67,12 +74,12 @@ fun Menu() {
             fontWeight = FontWeight.Bold,
             color = cuisineColor
         )
-        FirstMenu()
+        FirstMenu(menuActivityState = menuActivityState)
     }
 }
 
 @Composable
-fun FirstMenu() {
+fun FirstMenu(menuActivityState: MenuActivityState) {
     val items = listOf("All category", "Dinner", "Lunch", "Dessert")
     val navController = rememberNavController()
     var selectedItem by remember {
@@ -128,31 +135,35 @@ fun FirstMenu() {
         }
     )
 
-    NavHost(navController = navController, items = items)
+    NavHost(navController = navController, items = items, menuActivityState = menuActivityState)
 }
 
 @Composable
-fun NavHost(navController: NavHostController, items: List<String>) {
+fun NavHost(
+    navController: NavHostController,
+    items: List<String>,
+    menuActivityState: MenuActivityState
+) {
     NavHost(navController = navController, startDestination = items[0]) {
         composable(items[0]) {
-            NavScreen(items, itemName = items[0])
+            NavScreen(items, itemName = items[0], menuActivityState = menuActivityState)
         }
         composable(items[1]) {
-            NavScreen(items, itemName = items[1])
+            NavScreen(items, itemName = items[1], menuActivityState = menuActivityState)
         }
         composable(items[2]) {
-            NavScreen(items, itemName = items[2])
+            NavScreen(items, itemName = items[2], menuActivityState = menuActivityState)
         }
         composable(items[3]) {
-            NavScreen(items, itemName = items[3])
+            NavScreen(items, itemName = items[3], menuActivityState = menuActivityState)
         }
     }
 }
 
 @Composable
-fun NavScreen(items: List<String>, itemName: String) {
+fun NavScreen(items: List<String>, itemName: String, menuActivityState: MenuActivityState) {
     when(itemName) {
-        items[0] -> ProductCardsLayout()
+        items[0] -> ProductCardsLayout(menuActivityState = menuActivityState)
         items[1] -> WelcomeBody()
         items[2] -> HeadBody()
         items[3] -> WelcomeBody()
@@ -160,7 +171,7 @@ fun NavScreen(items: List<String>, itemName: String) {
 }
 
 @Composable
-fun ProductCardsLayout() {
+fun ProductCardsLayout(menuActivityState: MenuActivityState) {
     val cart = MenuActivityViewModel().testData
 
     var selectedItem by remember {
@@ -208,7 +219,8 @@ fun ProductCardsLayout() {
             }
         }
         LazyHorizontalGrid(
-            rows = GridCells.Adaptive(minSize = 275.dp),
+            rows = GridCells.Fixed(3),
+            state = rememberLazyGridState(0),
             modifier = Modifier
                 .height(860.dp)
                 .width(700.dp),
@@ -227,9 +239,13 @@ fun ProductCardsLayout() {
                         count = cartItem.countValue,
                         index = cartItem.index,
                         //Send item index to change outside selected item index
-                        onClick = {
+                        onClick = { it, count ->
                             selectedItem = it
                             //Change selected item index
+                            menuActivityState.saveMenuActivityData(
+                                key = cartItem.productNameValue,
+                                value = count
+                            )
                         }
                     )
                 }
@@ -248,7 +264,7 @@ fun ProductCard(
     isSelected: Boolean,
     count: Int,
     index: Int,
-    onClick: (Int) -> Unit
+    onClick: (Int, Int) -> Unit,
 ) {
     val backgroundColor = if (isSelected) {
         fontSecondary
@@ -276,8 +292,21 @@ fun ProductCard(
             .background(backgroundColor)
             .width(165.dp)
             .clickable(onClick = {
-                onClick(index)
+                onClick(index, state)
             })
+            .pointerInput(Unit) {
+                detectTapGestures(onPress = {
+                    onClick(index, state)
+                },
+                onDoubleTap = {
+                    state++
+                    onClick(index, state)
+                },
+                onLongPress = {
+                    state = 0
+                    onClick(index, state)
+                })
+            }
     ) {
         Column(
             modifier = Modifier
@@ -288,21 +317,17 @@ fun ProductCard(
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row {
-                image()
-            }
-            Row {
-                Text(
-                    text = productName,
-                    color = textColor,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 14.sp,
-                    modifier = Modifier
-                        .padding(
-                            top = 10.dp
-                        )
-                )
-            }
+            image()
+            Text(
+                text = productName,
+                color = textColor,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(
+                        top = 10.dp
+                    )
+            )
             Row(
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -329,33 +354,29 @@ fun ProductCard(
                     )
                 }
             }
+            Text(
+                text = stringResource(id = R.string.lorem_ipsum),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                color = textColor,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .size(width = 130.dp, height = 30.dp),
+            )
             Row {
                 Text(
-                    text = stringResource(id = R.string.lorem_ipsum),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
+                    text = "$$productCost",
+                    maxLines = 1,
                     color = textColor,
-                    fontSize = 12.sp,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
-                        .padding(top = 12.dp)
-                        .size(width = 130.dp, height = 30.dp),
+                        .padding(
+                            top = 15.dp,
+                            end = 41.dp
+                        )
                 )
-            }
-            Row {
-                Column {
-                    Text(
-                        text = "$$productCost",
-                        maxLines = 1,
-                        color = textColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier
-                            .padding(
-                                top = 15.dp,
-                                end = 41.dp
-                            )
-                    )
-                }
                 Column(
                     modifier = Modifier
                         .padding(top = 9.5.dp)
@@ -363,7 +384,7 @@ fun ProductCard(
                     FloatingActionButton(
                         onClick = {
                             state++
-                            onClick(index)
+                            onClick(index, state)
                         },
                         backgroundColor = noColor,
                         modifier = Modifier
@@ -399,12 +420,6 @@ fun ViewElem(state: Int) {
 
 @Preview(showBackground = true)
 @Composable
-fun MenuPreview() {
-    MenuContent(name = "CartActivity")
-}
-
-@Preview(showBackground = true)
-@Composable
 fun CardPreview() {
     ProductCard(
         image = {
@@ -420,5 +435,14 @@ fun CardPreview() {
         isSelected = true,
         count = 0,
         index = 0
-    ) {}
+    ) {_, _ ->}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MenuPreview() {
+    MenuContent(
+        name = "CartActivity",
+        menuActivityState = MenuActivityState(mutableMapOf())
+    )
 }
