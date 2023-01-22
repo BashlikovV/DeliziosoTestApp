@@ -13,8 +13,8 @@ import com.example.testapplication.R
 import kotlinx.parcelize.Parcelize
 
 class MenuActivityViewModel: ViewModel() {
-    //val state: LiveData<State> get() = stateLiveData
-    //private val stateLiveData = MutableLiveData<State>()
+//    val state: LiveData<State> get() = stateLiveData
+//    private val stateLiveData = MutableLiveData<State>()
 
     private val imagesIds = listOf(
         R.drawable.illustration,
@@ -24,7 +24,7 @@ class MenuActivityViewModel: ViewModel() {
         R.drawable.capellini,
         R.drawable.illustration
     )
-    private val namesList = listOf(
+    val namesList = listOf(
         "Spaghetti",
         "Linguine",
         "Capellini",
@@ -54,7 +54,7 @@ class MenuActivityViewModel: ViewModel() {
 //    fun initState(state: State) {
 //        stateLiveData.value = state
 //    }
-//
+
 //    private fun getImage(id: Int): @Composable () -> Unit {
 //        return { Image(
 //            painter = painterResource(id = id),
