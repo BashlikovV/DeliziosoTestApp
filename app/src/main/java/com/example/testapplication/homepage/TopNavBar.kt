@@ -1,7 +1,6 @@
 package com.example.testapplication.homepage
 
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -107,7 +106,6 @@ fun TopNavBar(name: String) {
                         Toast
                             .makeText(context, "Move to cart", Toast.LENGTH_SHORT)
                             .show()
-                        Log.i("MYTAG", cartIntent.toString())
                         context.startActivity(cartIntent)
                     } else {
                         Toast
@@ -121,8 +119,8 @@ fun TopNavBar(name: String) {
                     .padding(
                         top = 35.dp
                     )
-                    .height(24.dp)
-                    .width(24.dp)
+                    .height(26.dp)
+                    .width(26.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.cart),
