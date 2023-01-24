@@ -295,9 +295,10 @@ fun ProductCard(
                 onClick(index, state)
             })
             .pointerInput(Unit) {
-                detectTapGestures(onPress = {
-                    onClick(index, state)
-                },
+                detectTapGestures(
+                    onPress = {
+                        onClick(index, state)
+                    },
                     onDoubleTap = {
                         state++
                         onClick(index, state)
