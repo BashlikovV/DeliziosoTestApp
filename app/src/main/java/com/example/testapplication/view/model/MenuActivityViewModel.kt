@@ -15,6 +15,10 @@ import kotlinx.parcelize.Parcelize
 class MenuActivityViewModel: ViewModel() {
 //    val state: LiveData<State> get() = stateLiveData
 //    private val stateLiveData = MutableLiveData<State>()
+    companion object {
+
+    }
+    var lastIndexValue = 6
 
     private val imagesIds = listOf(
         R.drawable.illustration,
@@ -47,7 +51,7 @@ class MenuActivityViewModel: ViewModel() {
             starsCountValue = (1..5).random(),
             isSelectedValue = false,
             countValue = 0,
-            index = it
+            index = it,
         )
     }
 
@@ -72,6 +76,6 @@ class MenuActivityViewModel: ViewModel() {
         var starsCountValue: Int,
         var isSelectedValue: Boolean,
         var countValue: Int,
-        val index: Int
+        var index: Int
     ): Parcelable
 }
