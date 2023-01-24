@@ -3,7 +3,9 @@ package com.example.testapplication.cart
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,15 +33,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
+import com.example.testapplication.menu.CartItemState
 import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.cartBackBackground
 import com.example.testapplication.ui.theme.cartItemBackground
@@ -64,62 +72,111 @@ fun CartContent(name: String) {
     }
 }
 
-@Composable
-fun CartToBack() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .height(80.dp)
-            .background(cartBackBackground)
-            .clickable {
+private fun cartToBackConstraints(margin: Dp): ConstraintSet {
+    return ConstraintSet {
+        val backImage = createRefFor("backImage")
+        val orderListText = createRefFor("orderListText")
 
-            },
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Order list",
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 20.sp
-        )
+        constrain(backImage) {
+            start.linkTo(anchor = parent.start, margin = margin)
+            top.linkTo(anchor = parent.top, margin = margin)
+            bottom.linkTo(anchor = parent.bottom, margin = margin)
+        }
+        constrain(orderListText) {
+            end.linkTo(anchor = parent.end)
+            start.linkTo(anchor = parent.start)
+            top.linkTo(anchor = parent.top)
+            bottom.linkTo(anchor = parent.bottom)
+        }
     }
 }
 
+@Composable
+fun CartToBack() {
+    BoxWithConstraints {
+        val constraints = cartToBackConstraints(25.dp)
+
+        ConstraintLayout(
+            constraints,
+            modifier = Modifier
+                .background(cartBackBackground)
+                .fillMaxWidth(1f)
+                .height(80.dp)
+                .clickable {
+                    //TODO onClick listener
+                }
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.arrowback),
+                contentDescription = "Move to back",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(50.dp))
+                    .background(cartItemBackground)
+                    .layoutId("backImage")
+            )
+            Text(
+                text = "Order list",
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .layoutId("orderListText")
+            )
+        }
+    }
+}
+
+//TODO("fix bug with displaying cost and count")
 @Composable
 fun CartList(cart: MenuActivityViewModel) {
     val products = cart.testData.toMutableList().toMutableStateList()
     val heightState by remember {
         mutableStateOf(117 * cart.lastIndexValue + 50 * cart.lastIndexValue)
     }
+    var selectedItem by remember {
+        mutableStateOf(0)
+    }
 
     Column(
         modifier = Modifier
-            .padding(25.dp)
+            .padding(
+                start = 25.dp,
+                top = 25.dp,
+                end = 25.dp
+            )
             .background(background)
             .fillMaxSize(1f)
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
             state = rememberLazyGridState(0),
+            userScrollEnabled = false,
             modifier = Modifier
                 .height(heightState.dp)
                 .width(700.dp),
+            verticalArrangement = Arrangement.spacedBy(50.dp),
             content = {
                 items(products) { cartItem ->
                     CartListItem(
                         image = cartItem.imageValue,
                         productName = cartItem.productNameValue,
                         productCost = cartItem.productCostValue,
-                        isSelected = cartItem.isSelectedValue,
-                        count = cartItem.countValue,
+                        isSelected = selectedItem == cartItem.index,
+                        count = products[cartItem.index].countValue,
                         index = cartItem.index,
-                        onClick = { _, _ -> },
+                        onSelect = {
+                            selectedItem = it
+                        },
                         onDelClick = {
                             products.removeAt(it)
                             for (i in products.indices) {
                                 products[i].index = i
                             }
+                        },
+                        onCountChange = { it, count ->
+                            products[it].countValue = count
                         }
                     )
                 }
@@ -136,27 +193,41 @@ fun CartListItem(
     isSelected: Boolean,
     count: Int,
     index: Int,
-    onClick: (Int, Int) -> Unit,
-    onDelClick: (Int) -> Unit
+    onSelect: (Int) -> Unit,
+    onDelClick: (Int) -> Unit,
+    onCountChange: (Int, Int) -> Unit
 ) {
-    var countState by remember {
-        mutableStateOf(count)
+    val backgroundColor = if (isSelected) {
+        fontSecondary
+    } else {
+        cartItemBackground
     }
 
-    var costState by remember {
-        mutableStateOf(countState * productCost)
+    val textColor = if (isSelected) {
+        cartItemBackground
+    } else {
+        fontSecondary
+    }
+
+    val state by remember {
+        mutableStateOf(CartItemState(count, productCost))
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
             .height(113.dp)
-            .background(cartItemBackground),
+            .background(backgroundColor)
+            .pointerInput(Unit) {
+                detectTapGestures(onPress = {
+                    onSelect(index)
+                })
+            },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
             modifier = Modifier
-                .background(cartItemBackground)
+                .background(backgroundColor)
         ) {
             image()
         }
@@ -193,10 +264,12 @@ fun CartListItem(
                 ) {
                     IconButton(
                         onClick = {
-                            costState *= countState
-                            if (countState > 0) {
-                                countState--
+                            if (state.countState > 0) {
+                                state.countState--
+                                state.costState = productCost * state.costState
                             }
+                            onCountChange(index, state.countState)
+                            onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(25.dp))
@@ -220,7 +293,7 @@ fun CartListItem(
                     )
                 ) {
                     Text(
-                        text = countState.toString(),
+                        text = state.countState.toString(),
                         fontSize = 12.39.sp,
                         color = fontPrimary,
                         lineHeight = 23.sp,
@@ -237,8 +310,10 @@ fun CartListItem(
                 ) {
                     IconButton(
                         onClick = {
-                            costState *= countState
-                            countState++
+                            state.countState++
+                            state.costState = productCost * state.countState
+                            onCountChange(index, state.countState)
+                            onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(61.97.dp))
@@ -277,10 +352,10 @@ fun CartListItem(
                     .padding(top = 42.dp)
             ) {
                 Text(
-                    text = "$$costState",
+                    text = "$${state.costState}",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    color = fontSecondary,
+                    color = textColor,
                     lineHeight = 21.sp
                 )
             }
@@ -310,7 +385,8 @@ fun CartListItemPreview() {
         isSelected = true,
         count = 0,
         index = 0,
-        onClick = {_, _ ->},
-        onDelClick = {}
+        onSelect = {},
+        onDelClick = {},
+        onCountChange = {_, _ ->}
     )
 }
