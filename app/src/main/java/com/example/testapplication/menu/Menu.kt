@@ -298,14 +298,14 @@ fun ProductCard(
                 detectTapGestures(onPress = {
                     onClick(index, state)
                 },
-                onDoubleTap = {
-                    state++
-                    onClick(index, state)
-                },
-                onLongPress = {
-                    state = 0
-                    onClick(index, state)
-                })
+                    onDoubleTap = {
+                        state++
+                        onClick(index, state)
+                    },
+                    onLongPress = {
+                        state = 0
+                        onClick(index, state)
+                    })
             }
     ) {
         Column(
