@@ -1,5 +1,6 @@
 package com.example.testapplication.cart
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import com.example.testapplication.MenuActivity
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
-import com.example.testapplication.menu.CartItemState
 import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.cartBackBackground
 import com.example.testapplication.ui.theme.cartItemBackground
@@ -93,6 +95,8 @@ private fun cartToBackConstraints(margin: Dp): ConstraintSet {
 
 @Composable
 fun CartToBack() {
+    val context = LocalContext.current
+
     BoxWithConstraints {
         val constraints = cartToBackConstraints(25.dp)
 
@@ -103,7 +107,7 @@ fun CartToBack() {
                 .fillMaxWidth(1f)
                 .height(80.dp)
                 .clickable {
-                    //TODO onClick listener
+                    context.startActivity(Intent(context, MenuActivity::class.java))
                 }
         ) {
             Image(
@@ -131,7 +135,7 @@ fun CartToBack() {
 //TODO("fix bug with displaying cost and count")
 @Composable
 fun CartList(cart: MenuActivityViewModel) {
-    val products = cart.testData.toMutableList().toMutableStateList()
+    val products = cart.testData.toMutableStateList()
     val heightState by remember {
         mutableStateOf(117 * cart.lastIndexValue + 50 * cart.lastIndexValue)
     }
@@ -209,8 +213,11 @@ fun CartListItem(
         fontSecondary
     }
 
-    val state by remember {
-        mutableStateOf(CartItemState(count, productCost))
+    var countState by remember {
+        mutableStateOf(count)
+    }
+    var costState by remember {
+        mutableStateOf(productCost)
     }
 
     Row(
@@ -264,22 +271,26 @@ fun CartListItem(
                 ) {
                     IconButton(
                         onClick = {
-                            if (state.countState > 0) {
-                                state.countState--
-                                state.costState = productCost * state.costState
+                            if (countState > 0) {
+                                countState -= 1
+                                costState -= productCost
                             }
-                            onCountChange(index, state.countState)
+                            onCountChange(index, countState)
                             onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(25.dp))
                             .background(Color.White)
+                            .size(30.dp)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.red_minus),
                             contentDescription = "$productName deleting",
                             modifier = Modifier
-                                .size(30.dp),
+                                .size(
+                                    height = 10.dp,
+                                    width = 10.dp
+                                ),
                             contentScale = ContentScale.Crop
                         )
                     }
@@ -293,7 +304,7 @@ fun CartListItem(
                     )
                 ) {
                     Text(
-                        text = state.countState.toString(),
+                        text = countState.toString(),
                         fontSize = 12.39.sp,
                         color = fontPrimary,
                         lineHeight = 23.sp,
@@ -310,21 +321,24 @@ fun CartListItem(
                 ) {
                     IconButton(
                         onClick = {
-                            state.countState++
-                            state.costState = productCost * state.countState
-                            onCountChange(index, state.countState)
+                            countState += 1
+                            costState = productCost * countState
+                            onCountChange(index, countState)
                             onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(61.97.dp))
-                            .background(Color.White),
+                            .background(Color.White)
+                            .size(30.dp)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.green_plus),
                             contentDescription = "$productName adding",
                             modifier = Modifier
-                                .size(30.dp)
-                                .padding(bottom = 4.dp),
+                                .size(
+                                    height = 10.dp,
+                                    width = 10.dp
+                                ),
                             contentScale = ContentScale.Crop
                         )
                     }
@@ -352,7 +366,7 @@ fun CartListItem(
                     .padding(top = 42.dp)
             ) {
                 Text(
-                    text = "$${state.costState}",
+                    text = "$${costState}",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = textColor,
