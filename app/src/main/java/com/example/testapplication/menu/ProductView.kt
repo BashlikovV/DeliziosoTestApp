@@ -47,8 +47,8 @@ private fun productViewConstraints(): ConstraintSet {
 
         constrain(productImage) {
             top.linkTo(anchor = parent.top, margin = 13.dp)
-            start.linkTo(anchor = parent.start)
-            end.linkTo(anchor = parent.end)
+            start.linkTo(anchor = parent.start, margin = 21.dp)
+            end.linkTo(anchor = parent.end, margin = 21.dp)
             bottom.linkTo(anchor = productNameText.top)
         }
         constrain(productNameText) {
@@ -115,11 +115,7 @@ fun ProductView(
 
     BoxWithConstraints(
         modifier = Modifier
-            .size(
-                width = 155.dp,
-                height = 265.dp
-            )
-            .clip(RoundedCornerShape(38.2.dp))
+            .clip(RoundedCornerShape(30.dp))
             .background(backgroundColor)
             .clickable(onClick = {
                 onClick(index, countState)
@@ -153,6 +149,7 @@ fun ProductView(
                 modifier = Modifier
                     .size(113.dp)
                     .layoutId("productImage")
+                    .padding(top = 13.dp)
             )
             Text(
                 text = productName,
