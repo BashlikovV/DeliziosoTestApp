@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.testapplication.menu.MenuContent
@@ -30,8 +30,7 @@ class MenuActivity : ComponentActivity() {
                     color = background
                 ) {
                     MenuContent(
-                        name = this.localClassName,
-                        menuActivityState = menuActivityState
+                        name = this.localClassName
                     )
                 }
             }
@@ -49,8 +48,7 @@ fun DefaultPreview2() {
             color = MaterialTheme.colors.background
         ) {
             MenuContent(
-                name = "MenuActivity",
-                menuActivityState = MenuActivityState(mutableMapOf())
+                name = "MenuActivity"
             )
         }
     }

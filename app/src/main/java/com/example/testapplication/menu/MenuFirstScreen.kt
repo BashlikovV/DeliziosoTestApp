@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,26 +32,23 @@ import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
 import com.example.testapplication.view.model.MenuActivityViewModel
 
-private fun menuFirstScreenConstraints(margin: Dp): ConstraintSet {
+private fun menuFirstScreenConstraints(): ConstraintSet {
     return ConstraintSet {
         val menuGroupNameText = createRefFor("menuGroupNameText")
         val menuGroupNameSpacer = createRefFor("menuGroupNameSpacer")
         val lazyFirstScreenContent = createRefFor("lazyFirstScreenContent")
 
         constrain(menuGroupNameText) {
-            start.linkTo(anchor = parent.start, margin = margin)
-//            bottom.linkTo(anchor = menuGroupNameSpacer.top)
+            start.linkTo(anchor = parent.start)
         }
         constrain(menuGroupNameSpacer) {
-//            top.linkTo(anchor = menuGroupNameText.bottom, margin = 5.dp)
-            start.linkTo(anchor = parent.start, margin = margin)
-            bottom.linkTo(anchor = lazyFirstScreenContent.top, margin = 25.dp)
+            top.linkTo(anchor = menuGroupNameText.bottom, margin = 5.dp)
+            start.linkTo(anchor = parent.start)
         }
         constrain(lazyFirstScreenContent) {
             top.linkTo(anchor = menuGroupNameSpacer.bottom, margin = 25.dp)
             start.linkTo(anchor = parent.start)
             end.linkTo(anchor = parent.end)
-            bottom.linkTo(anchor = parent.bottom)
         }
     }
 }
@@ -68,7 +64,7 @@ fun MenuFirstScreen() {
             modifier = Modifier
                 .fillMaxSize(fraction = 1f)
         ) {
-            val constraints = menuFirstScreenConstraints(margin = 25.dp)
+            val constraints = menuFirstScreenConstraints()
 
             ConstraintLayout(
                 constraintSet = constraints,
@@ -114,8 +110,8 @@ fun MenuFirstScreenContent() {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
         state = rememberLazyGridState(0),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.spacedBy(18.dp),
         userScrollEnabled = false,
         modifier = Modifier
             .height(860.dp)
