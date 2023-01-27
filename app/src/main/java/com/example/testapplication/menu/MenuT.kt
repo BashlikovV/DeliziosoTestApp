@@ -118,8 +118,8 @@ fun MenuTopNavigationBar() {
     }
 
     NavigationBar(
-        contentColor = navItemColor,
-        containerColor = background,
+        contentColor = background,
+        containerColor = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth(fraction = 1f)
             .layoutId("menuNavigationBar")
