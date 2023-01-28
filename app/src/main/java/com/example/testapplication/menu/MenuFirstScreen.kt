@@ -27,10 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.testapplication.R
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
 import com.example.testapplication.view.model.MenuActivityViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 private fun menuFirstScreenConstraints(): ConstraintSet {
     return ConstraintSet {
@@ -99,10 +101,18 @@ fun MenuFirstScreen() {
 }
 
 @Composable
-fun MenuFirstScreenContent() {
+fun MenuFirstScreenContent(
+    viewModel: MenuUiViewModel = viewModel()
+) {
     //TODO("Remade to ViewModel and LiveData. Test solution!")
     val menuItems = MenuActivityViewModel().testData
 
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.initUiState(
+        menuItems.map { it.countValue },
+        menuItems.map { R.drawable.illustration },
+        menuItems.map { it.productNameValue }
+    )
     var selectedItem by remember {
         mutableStateOf(0)
     }
