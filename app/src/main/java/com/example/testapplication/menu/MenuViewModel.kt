@@ -1,29 +1,28 @@
 package com.example.testapplication.menu
 
-import androidx.compose.runtime.Composable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-class MenuViewModel: ViewModel() {
-    private val _count: MutableLiveData<List<Int>> = MutableLiveData(listOf(0))
-    val count: LiveData<List<Int>> = _count
 
-    fun setCount(newCount: List<Int>) {
-        _count.postValue(newCount)
-    }
+data class MenuUiState(
+    val counts: List<Int> = listOf(0),
+    val images: List<Int>? = null,
+    val names: List<String>? = null
+)
+class MenuUiViewModel: ViewModel() {
+    private val _uiState = MutableStateFlow(MenuUiState())
+    val uiState: StateFlow<MenuUiState> = _uiState.asStateFlow()
 
-    private val _image: MutableLiveData<List<@Composable () -> Unit>> = MutableLiveData(listOf {})
-    val image: LiveData<List<@Composable () -> Unit>> = _image
-
-    fun setImage(newImages: List<@Composable () -> Unit>) {
-        _image.postValue(newImages)
-    }
-
-    private val _name: MutableLiveData<List<String>> = MutableLiveData(listOf(""))
-    val name: LiveData<List<String>> = _name
-
-    fun setName(newName: List<String>) {
-        _name.postValue(newName)
+    fun initUiState(counts: List<Int>, images: List<Int>?, names: List<String>?) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                counts = counts,
+                images = images,
+                names = names
+            )
+        }
     }
 }
