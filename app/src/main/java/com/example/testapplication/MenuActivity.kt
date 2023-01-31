@@ -10,18 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.testapplication.menu.MenuContent
-import com.example.testapplication.state.MenuActivityState
 import com.example.testapplication.ui.theme.TestApplicationTheme
 import com.example.testapplication.ui.theme.background
 
 class MenuActivity : ComponentActivity() {
-    private lateinit var menuActivityState: MenuActivityState
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        menuActivityState = MenuActivityState(mutableMapOf())
-
         setContent {
             TestApplicationTheme {
                 // A surface container using the 'background' color from the theme

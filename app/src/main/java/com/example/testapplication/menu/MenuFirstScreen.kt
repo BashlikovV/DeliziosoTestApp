@@ -28,11 +28,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.testapplication.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
-import com.example.testapplication.view.model.MenuActivityViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 private fun menuFirstScreenConstraints(): ConstraintSet {
     return ConstraintSet {
@@ -104,15 +102,10 @@ fun MenuFirstScreen() {
 fun MenuFirstScreenContent(
     viewModel: MenuUiViewModel = viewModel()
 ) {
-    //TODO("Remade to ViewModel and LiveData. Test solution!")
-    val menuItems = MenuActivityViewModel().testData
+    val menuItems = MenuActivityData().testData
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.initUiState(
-        menuItems.map { it.countValue },
-        menuItems.map { R.drawable.illustration },
-        menuItems.map { it.productNameValue }
-    )
+
     var selectedItem by remember {
         mutableStateOf(0)
     }
@@ -130,8 +123,7 @@ fun MenuFirstScreenContent(
     ) {
         items(menuItems) { menuItem ->
             ProductView(
-                //TODO("Change menu Items in ViewModel.")
-                image = R.drawable.illustration,
+                image = menuItem.imageValue,
                 productName = menuItem.productNameValue,
                 productCost = menuItem.productCostValue,
                 starsCount = menuItem.starsCountValue,
@@ -141,6 +133,7 @@ fun MenuFirstScreenContent(
                 onClick = { selectedItemIndex, count ->
                     selectedItem = selectedItemIndex
                     menuItems[selectedItemIndex].countValue = count
+                    uiState.counts = menuItems.map { it.countValue }
                 }
             )
         }
