@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
@@ -50,12 +48,12 @@ import com.example.testapplication.MenuActivity
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
+import com.example.testapplication.menu.MenuActivityData
 import com.example.testapplication.ui.theme.background
 import com.example.testapplication.ui.theme.cartBackBackground
 import com.example.testapplication.ui.theme.cartItemBackground
 import com.example.testapplication.ui.theme.fontPrimary
 import com.example.testapplication.ui.theme.fontSecondary
-import com.example.testapplication.view.model.MenuActivityViewModel
 
 @Composable
 fun CartContent(name: String) {
@@ -69,7 +67,7 @@ fun CartContent(name: String) {
     ) {
         TopNavBar(name = name)
         CartToBack()
-        CartList(cart = MenuActivityViewModel())
+        CartList(cart = MenuActivityData())
         Footer(name = name)
     }
 }
@@ -132,15 +130,11 @@ fun CartToBack() {
     }
 }
 
-//TODO("fix bug with displaying cost and count")
 @Composable
-fun CartList(cart: MenuActivityViewModel) {
+fun CartList(cart: MenuActivityData) {
     val products = cart.testData.toMutableStateList()
     val heightState by remember {
         mutableStateOf(117 * cart.lastIndexValue + 50 * cart.lastIndexValue)
-    }
-    var selectedItem by remember {
-        mutableStateOf(0)
     }
 
     Column(
@@ -167,12 +161,8 @@ fun CartList(cart: MenuActivityViewModel) {
                         image = cartItem.imageValue,
                         productName = cartItem.productNameValue,
                         productCost = cartItem.productCostValue,
-                        isSelected = selectedItem == cartItem.index,
                         count = products[cartItem.index].countValue,
                         index = cartItem.index,
-                        onSelect = {
-                            selectedItem = it
-                        },
                         onDelClick = {
                             products.removeAt(it)
                             for (i in products.indices) {
@@ -191,52 +181,39 @@ fun CartList(cart: MenuActivityViewModel) {
 
 @Composable
 fun CartListItem(
-    image: @Composable () -> Unit,
+    image: Int,
     productName: String,
     productCost: Float,
-    isSelected: Boolean,
     count: Int,
     index: Int,
-    onSelect: (Int) -> Unit,
     onDelClick: (Int) -> Unit,
     onCountChange: (Int, Int) -> Unit
 ) {
-    val backgroundColor = if (isSelected) {
-        fontSecondary
-    } else {
-        cartItemBackground
-    }
-
-    val textColor = if (isSelected) {
-        cartItemBackground
-    } else {
-        fontSecondary
-    }
-
     var countState by remember {
         mutableStateOf(count)
     }
     var costState by remember {
-        mutableStateOf(productCost)
+        mutableStateOf(0f)
     }
 
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
             .height(113.dp)
-            .background(backgroundColor)
-            .pointerInput(Unit) {
-                detectTapGestures(onPress = {
-                    onSelect(index)
-                })
-            },
+            .background(cartItemBackground),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
             modifier = Modifier
-                .background(backgroundColor)
+                .background(cartItemBackground)
         ) {
-            image()
+            Image(
+                painter = painterResource(id = image),
+                contentDescription = productName,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(113.dp)
+            )
         }
         Column(
             modifier = Modifier
@@ -276,7 +253,6 @@ fun CartListItem(
                                 costState -= productCost
                             }
                             onCountChange(index, countState)
-                            onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(25.dp))
@@ -324,7 +300,6 @@ fun CartListItem(
                             countState += 1
                             costState = productCost * countState
                             onCountChange(index, countState)
-                            onSelect(index)
                         },
                         modifier = Modifier
                             .clip(RoundedCornerShape(61.97.dp))
@@ -350,7 +325,9 @@ fun CartListItem(
         ) {
             Row {
                 IconButton(
-                    onClick = { onDelClick(index) }
+                    onClick = {
+                        onDelClick(index)
+                    }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.remove),
@@ -369,7 +346,7 @@ fun CartListItem(
                     text = "$${costState}",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    color = textColor,
+                    color = fontSecondary,
                     lineHeight = 21.sp
                 )
             }
@@ -387,19 +364,11 @@ fun CartPreview() {
 @Composable
 fun CartListItemPreview() {
     CartListItem(
-        image = {
-            Image(
-                painter = painterResource(id = R.drawable.illustration),
-                contentDescription = "",
-                contentScale = ContentScale.Crop
-            )
-        },
+        image = R.drawable.illustration,
         productName = "Spaghetti",
         productCost = 12.05f,
-        isSelected = true,
         count = 0,
         index = 0,
-        onSelect = {},
         onDelClick = {},
         onCountChange = {_, _ ->}
     )

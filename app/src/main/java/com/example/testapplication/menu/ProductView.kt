@@ -1,5 +1,6 @@
 package com.example.testapplication.menu
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -84,7 +85,7 @@ private fun productViewConstraints(): ConstraintSet {
 
 @Composable
 fun ProductView(
-    image: Int,
+    @DrawableRes image: Int,
     productName: String,
     productCost: Float,
     starsCount: Int,

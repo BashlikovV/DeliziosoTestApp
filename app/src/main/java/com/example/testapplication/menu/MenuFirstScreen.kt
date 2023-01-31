@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import com.example.testapplication.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
-import com.example.testapplication.view.model.MenuActivityViewModel
 
 private fun menuFirstScreenConstraints(): ConstraintSet {
     return ConstraintSet {
@@ -99,9 +99,12 @@ fun MenuFirstScreen() {
 }
 
 @Composable
-fun MenuFirstScreenContent() {
-    //TODO("Remade to ViewModel and LiveData. Test solution!")
-    val menuItems = MenuActivityViewModel().testData
+fun MenuFirstScreenContent(
+    viewModel: MenuUiViewModel = viewModel()
+) {
+    val menuItems = MenuActivityData().testData
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     var selectedItem by remember {
         mutableStateOf(0)
@@ -120,8 +123,7 @@ fun MenuFirstScreenContent() {
     ) {
         items(menuItems) { menuItem ->
             ProductView(
-                //TODO("Change menu Items in ViewModel.")
-                image = R.drawable.illustration,
+                image = menuItem.imageValue,
                 productName = menuItem.productNameValue,
                 productCost = menuItem.productCostValue,
                 starsCount = menuItem.starsCountValue,
@@ -131,6 +133,7 @@ fun MenuFirstScreenContent() {
                 onClick = { selectedItemIndex, count ->
                     selectedItem = selectedItemIndex
                     menuItems[selectedItemIndex].countValue = count
+                    uiState.counts = menuItems.map { it.countValue }
                 }
             )
         }

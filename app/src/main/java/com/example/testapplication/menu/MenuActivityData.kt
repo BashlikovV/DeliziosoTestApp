@@ -1,18 +1,10 @@
-package com.example.testapplication.view.model
+package com.example.testapplication.menu
 
 import android.os.Parcelable
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.testapplication.R
 import kotlinx.parcelize.Parcelize
 
-class MenuActivityViewModel: ViewModel() {
+class MenuActivityData {
     var lastIndexValue = 6
 
     private val imagesIds = listOf(
@@ -33,14 +25,7 @@ class MenuActivityViewModel: ViewModel() {
     )
     val testData = (0..5).map {
         State(
-            imageValue = {
-                Image(
-                    painter = painterResource(id = imagesIds[it]),
-                    contentDescription = namesList[it],
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(113.dp)
-                )
-            },
+            imageValue = imagesIds[it],
             productNameValue = namesList[it],
             productCostValue = (10..100).random().toFloat(),
             starsCountValue = (1..5).random(),
@@ -52,7 +37,7 @@ class MenuActivityViewModel: ViewModel() {
 
     @Parcelize
     data class State(
-        var imageValue: @Composable () -> Unit,
+        var imageValue: Int,
         var productNameValue: String,
         var productCostValue: Float,
         var starsCountValue: Int,
