@@ -10,7 +10,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 private val DarkColorPalette = darkColors(
     primary = background,
     primaryVariant = background,
-    secondary = reservationColor
+    secondary = cartBackBackground
 )
 
 private val LightColorPalette = lightColors(
