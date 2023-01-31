@@ -1,6 +1,9 @@
 package com.example.testapplication.menu
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,9 +11,13 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -114,6 +121,10 @@ fun ProductView(
         mutableStateOf(count)
     }
 
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     BoxWithConstraints(
         modifier = Modifier
             .clip(RoundedCornerShape(30.dp))
@@ -131,10 +142,12 @@ fun ProductView(
                         onClick(index, countState)
                     },
                     onLongPress = {
+                        //countState = 0
                         countState = 0
                         onClick(index, countState)
-                    })
-            },
+                    }
+                )
+            }
     ) {
         val constraints = productViewConstraints()
 
@@ -162,14 +175,30 @@ fun ProductView(
             )
             StarsRow(starsCount = starsCount)
             Text(
-                text = stringResource(id = R.string.lorem_ipsum),
-                maxLines = 2,
+                text = stringResource(id = R.string.lorem_ipsum)
+                        + stringResource(id = R.string.lorem_ipsum)
+                        + stringResource(id = R.string.lorem_ipsum),
+                maxLines = if (expanded) 10 else 2,
                 overflow = TextOverflow.Ellipsis,
                 color = textColor,
                 fontSize = 12.sp,
                 modifier = Modifier
-                    .size(width = 130.dp, height = 30.dp)
+//                    .size(width = 130.dp, height = 30.dp)
+                    .width(width = 130.dp)
+                    .height(height = if (expanded) 90.dp else 30.dp)
                     .layoutId("productDescriptionText")
+                    .clickable {
+                        expanded = !expanded
+                    }
+                    .animateContentSize(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                    .verticalScroll(
+                        state = rememberScrollState()
+                    )
             )
             Text(
                 text = "$$productCost",
