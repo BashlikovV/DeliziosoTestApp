@@ -1,13 +1,14 @@
 package com.example.testapplication.menu
 
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 import com.example.testapplication.R
 import kotlinx.parcelize.Parcelize
 
 class MenuActivityData {
     var lastIndexValue = 6
 
-    private val imagesIds = listOf(
+    @DrawableRes private val imagesIds = listOf(
         R.drawable.illustration,
         R.drawable.illustration,
         R.drawable.fletuccine,
@@ -15,7 +16,7 @@ class MenuActivityData {
         R.drawable.capellini,
         R.drawable.illustration
     )
-    val namesList = listOf(
+    private val namesList = listOf(
         "Spaghetti",
         "Linguine",
         "Capellini",
