@@ -183,7 +183,6 @@ fun ProductView(
                 color = textColor,
                 fontSize = 12.sp,
                 modifier = Modifier
-//                    .size(width = 130.dp, height = 30.dp)
                     .width(width = 130.dp)
                     .height(height = if (expanded) 90.dp else 30.dp)
                     .layoutId("productDescriptionText")
