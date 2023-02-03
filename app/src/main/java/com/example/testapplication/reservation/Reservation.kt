@@ -21,10 +21,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,18 +32,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.inputColor
 import com.example.testapplication.ui.theme.lorColor
-import com.example.testapplication.view.model.ReservationActivityViewModel
 
 @Composable
 fun ReservationCard(
     name: String,
-    reservationActivityViewModel: ReservationActivityViewModel
+    reservationViewModel: ReservationViewModel = viewModel()
 ) {
     Column(
         modifier = Modifier
@@ -84,14 +80,23 @@ fun ReservationCard(
                 contentScale = ContentScale.FillHeight,
             )
         }
-        GetText(value = ReservationActivityViewModel.DATA) {
-            reservationActivityViewModel.saveReservationActivityData(0, it)
+        GetText(
+            value = "Date",
+            textState = reservationViewModel.userDataInput
+        ) {
+            reservationViewModel.onReservationDataChanged(0, it)
         }
-        GetText(value = ReservationActivityViewModel.TIME) {
-            reservationActivityViewModel.saveReservationActivityData(1, it)
+        GetText(
+            value = "Time",
+            textState = reservationViewModel.userTimeInput
+        ) {
+            reservationViewModel.onReservationDataChanged(1, it)
         }
-        GetText(value = ReservationActivityViewModel.PARTY_SIZE) {
-            reservationActivityViewModel.saveReservationActivityData(2, it)
+        GetText(
+            value = "Party size",
+            textState = reservationViewModel.userPartySizeInput
+        ) {
+            reservationViewModel.onReservationDataChanged(2, it)
         }
         Footer(name = name)
     }
@@ -100,21 +105,17 @@ fun ReservationCard(
 @Composable
 fun GetText(
     value: String,
+    textState: String,
     listener: (String) -> Unit
 ) {
-    var text by rememberSaveable {
-        mutableStateOf("")
-    }
-
     Column(
         modifier = Modifier
             .padding(bottom = 25.dp)
     ) {
         TextField(
-            value = text,
+            value = textState,
             onValueChange = {
-                text = it
-                listener(text)
+                listener(it)
             },
             label = {
                 Text(
@@ -141,5 +142,5 @@ fun GetText(
 @Preview(showBackground = true)
 @Composable
 fun Test() {
-    ReservationCard(name = "text", ReservationActivityViewModel())
+    ReservationCard(name = "text", ReservationViewModel())
 }
