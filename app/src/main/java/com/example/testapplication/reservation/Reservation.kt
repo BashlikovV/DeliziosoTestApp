@@ -2,7 +2,14 @@ package com.example.testapplication.reservation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,7 +20,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,22 +29,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapplication.R
 import com.example.testapplication.footer.Footer
 import com.example.testapplication.homepage.TopNavBar
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.inputColor
 import com.example.testapplication.ui.theme.lorColor
-import com.example.testapplication.view.model.ReservationActivityViewModel
 
 @Composable
 fun ReservationCard(
     name: String,
-    reservationActivityViewModel: ReservationActivityViewModel
+    reservationViewModel: ReservationViewModel = viewModel()
 ) {
     Column(
         modifier = Modifier
@@ -74,14 +80,23 @@ fun ReservationCard(
                 contentScale = ContentScale.FillHeight,
             )
         }
-        GetText(value = ReservationActivityViewModel.DATA, reservationActivityViewModel) {
-            reservationActivityViewModel.saveReservationActivityData(0, it)
+        GetText(
+            value = "Date",
+            textState = reservationViewModel.userDataInput
+        ) {
+            reservationViewModel.onReservationDataChanged(0, it)
         }
-        GetText(value = ReservationActivityViewModel.TIME, reservationActivityViewModel) {
-            reservationActivityViewModel.saveReservationActivityData(1, it)
+        GetText(
+            value = "Time",
+            textState = reservationViewModel.userTimeInput
+        ) {
+            reservationViewModel.onReservationDataChanged(1, it)
         }
-        GetText(value = ReservationActivityViewModel.PARTY_SIZE, reservationActivityViewModel) {
-            reservationActivityViewModel.saveReservationActivityData(2, it)
+        GetText(
+            value = "Party size",
+            textState = reservationViewModel.userPartySizeInput
+        ) {
+            reservationViewModel.onReservationDataChanged(2, it)
         }
         Footer(name = name)
     }
@@ -90,22 +105,17 @@ fun ReservationCard(
 @Composable
 fun GetText(
     value: String,
-    reservationActivityViewModel: ReservationActivityViewModel,
+    textState: String,
     listener: (String) -> Unit
 ) {
-    var text by remember {
-        mutableStateOf(TextFieldValue(reservationActivityViewModel.loadReservationViewModel(value)))
-    }
-
     Column(
         modifier = Modifier
             .padding(bottom = 25.dp)
     ) {
         TextField(
-            value = text,
+            value = textState,
             onValueChange = {
-                text = it
-                listener(text.text)
+                listener(it)
             },
             label = {
                 Text(
@@ -132,5 +142,5 @@ fun GetText(
 @Preview(showBackground = true)
 @Composable
 fun Test() {
-    ReservationCard(name = "text", ReservationActivityViewModel())
+    ReservationCard(name = "text", ReservationViewModel())
 }

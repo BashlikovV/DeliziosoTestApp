@@ -26,6 +26,17 @@ android {
         }
     }
 
+    buildscript {
+        ext.kotlin_version = '1.8.0'
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'com.android.tools.build:gradle:7.4.0'
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -71,7 +82,7 @@ dependencies {
     def accompanist_version = "0.27.0"
     def firebase_bom_version = "31.2.0"
     def firebase_analytics_version = "21.2.0"
-    def runtime_compose_version = "2.6.0-alpha04"
+    def runtime_compose_version = '2.6.0-alpha04'
     def runtime_livedata_version = "1.3.3"
     def runtime_rxjava2_version = "1.3.3"
     def runtime_rxjava3_version = "1.3.3"
