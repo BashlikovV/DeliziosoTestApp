@@ -21,6 +21,8 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,8 @@ fun ReservationCard(
     name: String,
     reservationViewModel: ReservationViewModel = viewModel()
 ) {
+    val reservationUiState by reservationViewModel.reservationUiState.collectAsState()
+
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -82,19 +86,19 @@ fun ReservationCard(
         }
         GetText(
             value = "Date",
-            textState = reservationViewModel.userDataInput
+            textState = reservationUiState.currentDataState
         ) {
             reservationViewModel.onReservationDataChanged(0, it)
         }
         GetText(
             value = "Time",
-            textState = reservationViewModel.userTimeInput
+            textState = reservationUiState.currentTimeState
         ) {
             reservationViewModel.onReservationDataChanged(1, it)
         }
         GetText(
             value = "Party size",
-            textState = reservationViewModel.userPartySizeInput
+            textState = reservationUiState.currentPartySizeState
         ) {
             reservationViewModel.onReservationDataChanged(2, it)
         }
