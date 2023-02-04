@@ -48,6 +48,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+            // ./gradlew createDebugCoverageReport
+            // /build/outputs/reports/coverage/debug/
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
