@@ -7,6 +7,16 @@ plugins {
 
     id 'com.google.gms.google-services'
     id 'com.google.firebase.firebase-perf'
+
+    id "org.sonarqube" version "3.5.0.2730"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "BashlikovV_DeliziosoTestApp"
+        property "sonar.organization", "bashlikovv-1"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 android {
@@ -23,17 +33,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
-        }
-    }
-
-    buildscript {
-        ext.kotlin_version = '1.8.0'
-        repositories {
-            mavenCentral()
-        }
-        dependencies {
-            classpath 'com.android.tools.build:gradle:7.4.0'
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         }
     }
 
