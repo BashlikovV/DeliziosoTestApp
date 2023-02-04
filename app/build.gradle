@@ -9,14 +9,25 @@ plugins {
     id 'com.google.firebase.firebase-perf'
 
     id "org.sonarqube" version "3.5.0.2730"
+
+    id 'jacoco'
 }
 
 sonarqube {
+    group = "verification"
     properties {
         property "sonar.projectKey", "BashlikovV_DeliziosoTestApp"
         property "sonar.organization", "bashlikovv-1"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", jacocoTestReport.reports.xml.destination
+        properties["sonar.junit.reportPaths"] += integrationTest.reports.junitXml.destination
+        properties["sonar.tests"] += sourceSets.integrationTest.allSource.srcDirs
     }
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 
 android {
