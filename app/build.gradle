@@ -16,6 +16,13 @@ sonarqube {
         property "sonar.projectKey", "BashlikovV_DeliziosoTestApp"
         property "sonar.organization", "bashlikovv-1"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectName", "app"
+        property "sonar.reportPath", "${project.buildDir}/sonarqube/test.exec"
+        property "sonar.projectBaseDir", "$rootDir"
+        property "sonar.sources", "."
+        property "sonar.tests", ""
+        property "sonar.coverage.exclusions", "**/src/androidTest/**, **/src/test/**"
+        property "sonar.coverage.jacoco.xmlReportPaths", fileTree(include: ['*/*/jacoco*.xml'], dir: "$rootDir/app/build/reports/jacoco").collect()
     }
 }
 
