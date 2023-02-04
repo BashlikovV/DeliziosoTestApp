@@ -1,10 +1,8 @@
 package com.example.testapplication.reservation
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
@@ -13,13 +11,7 @@ import kotlinx.coroutines.flow.update
 class ReservationViewModel : ViewModel() {
 
     private val _reservationUiState = MutableStateFlow(ReservationUiState())
-
-    var userDataInput by mutableStateOf("")
-        private set
-    var userTimeInput by mutableStateOf("")
-        private set
-    var userPartySizeInput by mutableStateOf("")
-        private set
+    val reservationUiState = _reservationUiState.asStateFlow()
 
     fun onReservationDataChanged(index: Int, newTextValue: String) {
         _reservationUiState.update {
@@ -27,33 +19,34 @@ class ReservationViewModel : ViewModel() {
         }
     }
 
-    private fun updateUserDataInput(newValue: String) {
-        userDataInput = newValue
-    }
-
-    private fun updateUserTimeInput(newValue: String) {
-        userTimeInput = newValue
-    }
-
-    private fun updateUserPartySizeInput(newValue: String) {
-        userPartySizeInput = newValue
-    }
-
     private fun updateTextValue(index: Int, newTextValue: String): ReservationUiState {
         return when (index) {
-            0 -> {
-                updateUserDataInput(newTextValue)
-                _reservationUiState.value.copy(currentDataState = newTextValue)
-            }
-            1 -> {
-                updateUserTimeInput(newTextValue)
-                _reservationUiState.value.copy(currentTimeState = newTextValue)
-            }
-            2 -> {
-                updateUserPartySizeInput(newTextValue)
-                _reservationUiState.value.copy(currentPartySizeState = newTextValue)
-            }
+            0 -> _reservationUiState.value.copy(currentDataState = newTextValue, isError = false)
+            1 -> _reservationUiState.value.copy(currentTimeState = newTextValue, isError = false)
+            2 -> _reservationUiState.value.copy(currentPartySizeState = newTextValue, isError = false)
             else -> { ReservationUiState() }
         }
+    }
+
+    fun onActionDone() {
+        if (checkReservationUserInput()) {
+            _reservationUiState.update { currentState ->
+                currentState.copy(
+                    isError = true
+                )
+            }
+        } else {
+            _reservationUiState.update { currentState ->
+                currentState.copy(
+                    isError = false
+                )
+            }
+        }
+    }
+
+    private fun checkReservationUserInput(): Boolean {
+        return _reservationUiState.value.currentDataState.length < 6 ||
+            _reservationUiState.value.currentTimeState.length < 6 ||
+            _reservationUiState.value.currentPartySizeState.length < 6
     }
 }

@@ -12,15 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,8 @@ fun ReservationCard(
     name: String,
     reservationViewModel: ReservationViewModel = viewModel()
 ) {
+    val reservationUiState by reservationViewModel.reservationUiState.collectAsState()
+
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -82,19 +85,25 @@ fun ReservationCard(
         }
         GetText(
             value = "Date",
-            textState = reservationViewModel.userDataInput
+            textState = reservationUiState.currentDataState,
+            isError = reservationUiState.isError,
+            onActionDone = { reservationViewModel.onActionDone() }
         ) {
             reservationViewModel.onReservationDataChanged(0, it)
         }
         GetText(
             value = "Time",
-            textState = reservationViewModel.userTimeInput
+            textState = reservationUiState.currentTimeState,
+            isError = reservationUiState.isError,
+            onActionDone = { reservationViewModel.onActionDone() }
         ) {
             reservationViewModel.onReservationDataChanged(1, it)
         }
         GetText(
             value = "Party size",
-            textState = reservationViewModel.userPartySizeInput
+            textState = reservationUiState.currentPartySizeState,
+            isError = reservationUiState.isError,
+            onActionDone = { reservationViewModel.onActionDone() }
         ) {
             reservationViewModel.onReservationDataChanged(2, it)
         }
@@ -106,7 +115,9 @@ fun ReservationCard(
 fun GetText(
     value: String,
     textState: String,
-    listener: (String) -> Unit
+    isError: Boolean = false,
+    onActionDone: () -> Unit,
+    onValueChange: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -115,8 +126,9 @@ fun GetText(
         TextField(
             value = textState,
             onValueChange = {
-                listener(it)
+                onValueChange(it)
             },
+            isError = isError,
             label = {
                 Text(
                     text = value,
@@ -127,14 +139,20 @@ fun GetText(
             modifier = Modifier
                 .clip(RoundedCornerShape(20))
                 .background(inputColor),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = null
                 )
             },
-            colors = TextFieldDefaults.textFieldColors(lorColor)
+            colors = TextFieldDefaults.textFieldColors(lorColor),
+            keyboardActions = KeyboardActions(onDone = {
+                onActionDone()
+            })
         )
     }
 }
