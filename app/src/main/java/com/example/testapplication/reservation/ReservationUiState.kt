@@ -6,5 +6,6 @@ package com.example.testapplication.reservation
 data class ReservationUiState(
     val currentDataState: String = "",
     val currentTimeState: String = "",
-    val currentPartySizeState: String = ""
+    val currentPartySizeState: String = "",
+    val isError: Boolean = false
 )
