@@ -1,4 +1,4 @@
-package com.example.testapplication.menu
+package com.example.testapplication.menu.product.view
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize

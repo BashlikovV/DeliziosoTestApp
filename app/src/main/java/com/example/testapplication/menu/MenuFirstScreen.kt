@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.testapplication.menu.product.view.ProductView
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
 
