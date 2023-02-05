@@ -67,7 +67,7 @@ fun CartContent(name: String) {
     ) {
         TopNavBar(name = name)
         CartToBack()
-        CartList(cart = MenuActivityData())
+        CartList(cart = MenuActivityData)
         Footer(name = name)
     }
 }

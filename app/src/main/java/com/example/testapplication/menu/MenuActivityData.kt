@@ -5,10 +5,10 @@ import androidx.annotation.DrawableRes
 import com.example.testapplication.R
 import kotlinx.parcelize.Parcelize
 
-class MenuActivityData {
+object MenuActivityData {
     var lastIndexValue = 6
 
-    @DrawableRes private val imagesIds = listOf(
+    @DrawableRes val imagesIds = listOf(
         R.drawable.illustration,
         R.drawable.illustration,
         R.drawable.fletuccine,
@@ -16,7 +16,7 @@ class MenuActivityData {
         R.drawable.capellini,
         R.drawable.illustration
     )
-    private val namesList = listOf(
+    val namesList = listOf(
         "Spaghetti",
         "Linguine",
         "Capellini",

@@ -1,4 +1,4 @@
-package com.example.testapplication.menu
+package com.example.testapplication.menu.product.view
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
@@ -20,11 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
@@ -117,10 +113,6 @@ fun ProductView(
         fontSecondary
     }
 
-    var countState by remember {
-        mutableStateOf(count)
-    }
-
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -130,21 +122,18 @@ fun ProductView(
             .clip(RoundedCornerShape(30.dp))
             .background(backgroundColor)
             .clickable(onClick = {
-                onClick(index, countState)
+                onClick(index, count)
             })
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
-                        onClick(index, countState)
+                        onClick(index, count)
                     },
                     onDoubleTap = {
-                        countState++
-                        onClick(index, countState)
+                        onClick(index, count + 1)
                     },
                     onLongPress = {
-                        //countState = 0
-                        countState = 0
-                        onClick(index, countState)
+                        onClick(index, 0)
                     }
                 )
             }
@@ -210,15 +199,14 @@ fun ProductView(
             )
             FloatingActionButton(
                 onClick = {
-                    countState++
-                    onClick(index, countState)
+                    onClick(index, count + 1)
                 },
                 backgroundColor = noColor,
                 modifier = Modifier
                     .size(33.dp)
                     .layoutId("addingFAB")
             ) {
-                FABAddContent(state = countState)
+                FABAddContent(state = count)
             }
         }
     }
