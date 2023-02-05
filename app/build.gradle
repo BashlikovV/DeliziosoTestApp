@@ -11,48 +11,12 @@ plugins {
     id "org.sonarqube" version "3.5.0.2730"
 }
 
-apply plugin: 'jacoco'
-
-jacoco {
-    version "0.7.1.201405082137"
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
-    group = "Reporting"
-//    description = "Generate Jacoco coverage reports after running tests."
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-    classDirectories.from(fileTree(
-            dir: 'build/intermediates/classes/debug/com/yourapppackagename',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']))
-    sourceDirectories.from(files('src/main/java'))
-    executionData.from(files('build/jacoco/testDebugUnitTest.exec'))
-    doFirst {
-        files('build/intermediates/classes/debug').getFiles().each { file ->
-            if (file.name.contains('$$')) {
-                file.renameTo(file.path.replace('$$', '$'))
-            }
-        }
-    }
-}
-
 sonarqube {
     properties {
         property "sonar.projectKey", "BashlikovV_DeliziosoTestApp"
         property "sonar.organization", "bashlikovv-1"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.projectName", "app"
-        property "sonar.reportPath", "${project.buildDir}/sonarqube/test.exec"
-        property "sonar.projectBaseDir", "$rootDir"
-        property "sonar.sources", "."
-        property "sonar.tests", ""
-        property "sonar.coverage.exclusions", "**/src/androidTest/**, **/src/test/**"
-        property "sonar.coverage.jacoco.xmlReportPaths", fileTree(include: ['*/*/jacoco*.xml'], dir: "$rootDir/app/build/reports/jacoco").collect()
     }
 }
 
