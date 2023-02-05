@@ -15,10 +15,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.testapplication.ui.theme.cuisineColor
 import com.example.testapplication.ui.theme.fontSecondary
@@ -52,6 +49,7 @@ private fun menuFirstScreenConstraints(): ConstraintSet {
         }
     }
 }
+
 @Composable
 fun MenuFirstScreen() {
     Column(
@@ -100,15 +98,9 @@ fun MenuFirstScreen() {
 
 @Composable
 fun MenuFirstScreenContent(
-    viewModel: MenuUiViewModel = viewModel()
+    menuViewModel: MenuViewModel = viewModel()
 ) {
-    val menuItems = MenuActivityData().testData
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    var selectedItem by remember {
-        mutableStateOf(0)
-    }
+    val menuUiState: State<List<MenuUiState>> = menuViewModel.menuUiState.collectAsState()
 
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
@@ -121,19 +113,18 @@ fun MenuFirstScreenContent(
             .width(700.dp)
             .layoutId("lazyFirstScreenContent")
     ) {
-        items(menuItems) { menuItem ->
+        items(menuUiState.value) { menuItem ->
             ProductView(
-                image = menuItem.imageValue,
-                productName = menuItem.productNameValue,
-                productCost = menuItem.productCostValue,
-                starsCount = menuItem.starsCountValue,
-                isSelected = menuItem.index == selectedItem,
-                count = menuItem.countValue,
+                image = menuItem.currentImageValue,
+                productName = menuItem.currentNameValue,
+                productCost = menuItem.currentCostValue,
+                starsCount = menuItem.currentStarsValue,
+                isSelected = menuItem.index == menuViewModel.selectedItem,
+                count = menuItem.currentCountValue,
                 index = menuItem.index,
                 onClick = { selectedItemIndex, count ->
-                    selectedItem = selectedItemIndex
-                    menuItems[selectedItemIndex].countValue = count
-                    uiState.counts = menuItems.map { it.countValue }
+                    menuViewModel.onSelectItem(selectedItemIndex)
+                    menuViewModel.onCountChanged(selectedItemIndex, count)
                 }
             )
         }
