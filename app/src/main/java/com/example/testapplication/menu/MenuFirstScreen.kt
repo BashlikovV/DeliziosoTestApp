@@ -105,7 +105,7 @@ fun MenuFirstScreenContent(
 
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
-        state = rememberLazyGridState(0),
+        state = rememberLazyGridState(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.spacedBy(18.dp),
         userScrollEnabled = false,

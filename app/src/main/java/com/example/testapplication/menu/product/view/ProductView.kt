@@ -128,12 +128,6 @@ fun ProductView(
                 detectTapGestures(
                     onPress = {
                         onClick(index, count)
-                    },
-                    onDoubleTap = {
-                        onClick(index, count + 1)
-                    },
-                    onLongPress = {
-                        onClick(index, 0)
                     }
                 )
             }
