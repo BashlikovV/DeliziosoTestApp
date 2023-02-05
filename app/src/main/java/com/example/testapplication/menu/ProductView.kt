@@ -117,10 +117,6 @@ fun ProductView(
         fontSecondary
     }
 
-    var countState by remember {
-        mutableStateOf(count)
-    }
-
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -130,21 +126,18 @@ fun ProductView(
             .clip(RoundedCornerShape(30.dp))
             .background(backgroundColor)
             .clickable(onClick = {
-                onClick(index, countState)
+                onClick(index, count)
             })
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
-                        onClick(index, countState)
+                        onClick(index, count)
                     },
                     onDoubleTap = {
-                        countState++
-                        onClick(index, countState)
+                        onClick(index, count + 1)
                     },
                     onLongPress = {
-                        //countState = 0
-                        countState = 0
-                        onClick(index, countState)
+                        onClick(index, 0)
                     }
                 )
             }
@@ -210,15 +203,14 @@ fun ProductView(
             )
             FloatingActionButton(
                 onClick = {
-                    countState++
-                    onClick(index, countState)
+                    onClick(index, count + 1)
                 },
                 backgroundColor = noColor,
                 modifier = Modifier
                     .size(33.dp)
                     .layoutId("addingFAB")
             ) {
-                FABAddContent(state = countState)
+                FABAddContent(state = count)
             }
         }
     }
