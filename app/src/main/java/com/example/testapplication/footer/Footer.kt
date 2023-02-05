@@ -1,5 +1,6 @@
 package com.example.testapplication.footer
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -31,9 +32,6 @@ import com.example.testapplication.ui.theme.white
 @Composable
 fun Footer(name: String) {
     val context = LocalContext.current
-    val homeIntent = Intent(context, MainActivity::class.java)
-    val reservationIntent = Intent(context, ReservationActivity::class.java)
-    val menuIntent = Intent(context, MenuActivity::class.java)
 
     val toast: (String) -> Unit = {
         Toast
@@ -51,17 +49,8 @@ fun Footer(name: String) {
         Row {
             FloatingActionButton (
                 onClick = {
-                    if (name != "MainActivity") {
-                        Toast
-                            .makeText(context, "Move to home", Toast.LENGTH_SHORT)
-                            .show()
-                        context.startActivity(homeIntent)
-                    } else {
-                        Toast
-                            .makeText(context, "You in homepage", Toast.LENGTH_SHORT)
-                            .show()
-
-                    }
+                    val homeIntent = Intent(context, MainActivity::class.java)
+                    startActivity(context, homeIntent, name)
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -160,27 +149,18 @@ fun Footer(name: String) {
         ) {
             PrimaryFooterText(str = "Page") {toast(it)}
             FooterText(str = "Home") {
-                if (name != "MainActivity") {
-                    context.startActivity(homeIntent)
-                } else {
-                    toast("$it is open")
-                }
+                val homeIntent = Intent(context, MainActivity::class.java)
+                startActivity(context, homeIntent, name)
             }
             FooterText(str = "Menu") {
-                if (name != "MenuActivity") {
-                    context.startActivity(menuIntent)
-                } else {
-                    toast("$it is open")
-                }
+                val menuIntent = Intent(context, MenuActivity::class.java)
+                startActivity(context, menuIntent, name)
             }
             FooterText(str = "Order online") {toast(it)}
             FooterText(str = "Catering") {toast(it)}
             FooterText(str = "Reservation") {
-                if (name != "ReservationActivity") {
-                    context.startActivity(reservationIntent)
-                } else {
-                    toast("$it is open")
-                }
+                val reservationIntent = Intent(context, ReservationActivity::class.java)
+                startActivity(context, reservationIntent, name)
             }
 
             PrimaryFooterText(str = "Reservation") {toast(it)}
@@ -216,6 +196,24 @@ fun PrimaryFooterText(str: String, onClick: (String) -> Unit) {
                 fontWeight = FontWeight.SemiBold
             )
         }
+    }
+}
+
+fun startActivity(
+    context: Context,
+    intent: Intent,
+    name: String
+) {
+    if (name != "MainActivity") {
+        Toast
+            .makeText(context, "Move to $name", Toast.LENGTH_SHORT)
+            .show()
+        context.startActivity(intent)
+    } else {
+        Toast
+            .makeText(context, "You in $name", Toast.LENGTH_SHORT)
+            .show()
+
     }
 }
 
