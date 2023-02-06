@@ -28,7 +28,7 @@ subprojects {
         properties {
             property "sonar.sources", "src"
         }
-        setAndroidVariant('fullDebug')
+        setAndroidVariant('debug')
     }
 }
 
