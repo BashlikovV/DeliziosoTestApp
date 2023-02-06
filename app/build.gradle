@@ -68,23 +68,6 @@ android {
     }
 }
 
-subprojects {
-    sonar {
-        properties {
-            property "sonar.sources", "src"
-        }
-        setAndroidVariant('fullDebug')
-    }
-}
-
-project(":app") {
-    sonar {
-        properties {
-            property "sonar.branch", "Foo"
-        }
-    }
-}
-
 dependencies {
     def lifecycle_version = "2.5.1"
     def firebase_version = "20.3.1"
