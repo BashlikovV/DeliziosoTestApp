@@ -124,7 +124,7 @@ fun ProductView(
             .clickable(onClick = {
                 onClick(index, count)
             })
-            .pointerInput(Unit) {
+            .pointerInput(count) {
                 detectTapGestures(
                     onPress = {
                         onClick(index, count)
