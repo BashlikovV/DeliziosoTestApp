@@ -37,6 +37,6 @@ sonarqube {
         property "sonar.organization", "bashlikovv-1"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.projectName", "app"
-        property "sonar.androidLint.reportPaths", "/home/bashlykovvv/AndroidStudioProjects/TestApplication/app/build/reports/"
+        property "sonar.androidLint.reportPaths", "/home/bashlykovvv/AndroidStudioProjects/TestApplication/app/build/reports/lint-results-debug.xml"
     }
 }
